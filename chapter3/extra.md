@@ -16,3 +16,5 @@ Rust宣告可以無初始值，但同時須指定資料型態。
 ## 陣列
 宣告形式：`let <name> [: [type ; number]] = <[value1, value2, ...]> ;` 或是`let <name> : <[type ; number]>`
 存取： `<name>[n]`，其中`n`代表index value。
+
+back to [category](./../README.md)
