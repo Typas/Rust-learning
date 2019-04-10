@@ -1,0 +1,12 @@
+#+TITLE: 3.1 Variables and Mutability
+
+* let
+  經由let宣告的是一個變數，變數本身預設為不可變。也就是說，以下的程式無法編譯：
+  #+BEGIN_SRC rust
+  let x = 5;
+  x = 6;
+  #+END_SRC
+
+* const
+
+back to [[./../README.md][category]]
