@@ -1,6 +1,0 @@
-#+TITLE: 3.2 Date Types 資料型態
-
-* Links
-  - [[./variable.org][Previous]] section
-  - Next section
-  - back to [[./../README.md][category]]
