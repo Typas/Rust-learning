@@ -4,5 +4,5 @@ This note is based on [The Rust Programming Language](https://doc.rust-lang.org/
 
 ## Chapter 3: Common Programming Concepts
 - 3.1 [Variables and Mutability](./chapter3/variable.org)
-- 3.2
+- 3.2 [Data Types](./chapter3/type.org)
 
