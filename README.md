@@ -8,7 +8,8 @@
 - 3.3 [How Functions Work](./chapter3/function.md)
 - 3.4 [Comments](./chapter3/comment.md)
 - 3.5 [Control Flow](./chapter3/flow.md)
+- [Extra Notes](./chapter3/extra.md)
 
-## Chatper 4: Understanding Ownership
+## Chapter 4: Understanding Ownership
 
 
