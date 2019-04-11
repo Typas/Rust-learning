@@ -34,4 +34,4 @@ const pi : f64 = 3.14159;
 只有以`//`開始的單行註解。
 
 
-back to [category](./../README.md)
+回到[目錄](./../README.md)

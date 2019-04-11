@@ -115,6 +115,6 @@ fn plus_one(x : i32) -> i32 {
 執行後會印出`The value of x is: 6`。但如果把`x + 1`那行後面加了個分號時，會讓它從一個運算式變成一個敘述，而得到一個編譯錯誤`mismatched types`。函式`plus_one`的定義顯示它應該回傳一個`i32`的值，但是敘述不會回傳任何值，以空數據組`()`表示回傳值為空。回傳的值與定義互相矛盾，從而得到一個錯誤。
 
 # Links
-- Previous section - 3.2 [Data Types](./type.md)
-- Next section - 3.4 [Comments](./comment.md)
-- back to [category](./../README.md)
+- 前一章節 - 3.2 [Data Types](./type.md)
+- 下一章節 - 3.4 [Comments](./comment.md)
+- 回到[目錄](./../README.md)

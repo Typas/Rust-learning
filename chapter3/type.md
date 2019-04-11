@@ -162,9 +162,9 @@ println!("The value of element is: {}", element);
 這是第一個Rust安全原則的例子。在許多低階語言如C，這種檢查並不存在，當你提供了一個錯誤的索引值時，不應被存取的記憶體位置也能存取得到。
 
 # Links
-- Previous section - 3.1 [Variables and Mutability](./variable.md)
-- Next section - 3.3 [How Functions Work](./function.md)
-- back to [category](./../README.md)
+- 前一章節 - 3.1 [Variables and Mutability](./variable.md)
+- 下一章節 - 3.3 [How Functions Work](./function.md)
+- 回到[目錄](./../README.md)
 
 ## References
 - *if* - 3.5 [Control Flow](./flow.md)

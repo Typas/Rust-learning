@@ -40,5 +40,5 @@ let x = x + 1;
 - 遮蔽可以創造新型態的變數，`mut`只能在同一型態中賦值。
 
 # Links
-- Next section - 3.2 [Data Types](./type.md)
-- back to [category](./../README.md)
+- 下一章節 - 3.2 [Data Types](./type.md)
+- 回到[目錄](./../README.md)

@@ -1,5 +1,5 @@
 # 3.5 Control Flow 流程控制
 
 # Links
-- Previous section - 3.4 [Comments](./comment.md)
-- back to [category](./../README.md)
+- 前一章節 - 3.4 [Comments](./comment.md)
+- 回到[目錄](./../README.md)

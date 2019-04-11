@@ -26,9 +26,9 @@ let minimum_pay = 23100;
 Rust還有另一種註解叫文件註解，會在第14章討論到。
 
 # Links
-- Previous section - 3.3 [How Functions Work](./function.md)
-- Next section - 3.5 [Control Flow](./flow.md)
-- back to [category](./../README.md)
+- 前一章節 - 3.3 [How Functions Work](./function.md)
+- 下一章節 - 3.5 [Control Flow](./flow.md)
+- 回到[目錄](./../README.md)
 
 ## References
 - 14.2 [Publishing a Crate to Crates.io] 尚未完工
