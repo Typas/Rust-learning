@@ -5,7 +5,6 @@ Rust宣告可以無初始值，但同時須指定資料型態。
 
 ## 變數
 - 宣告：`let [mut] <name> [: type] = <expr> ;`或是`let [mut] <name> : <type> ;`。
-- 例子：
 ``` rust
 let a:i32;
 let mut b = 60;
@@ -20,7 +19,13 @@ const pi : f64 = 3.14159;
 ## Tuple
 - 宣告：`let <name> [: (type1, type2, ...)] = <(var1, var2, ...)> ;`或`let <name> : <(type1, type2, ...)> ;`。
 - 解構： `let (<name1>, <name2>, ...) = <tuple_name> ;`。其中的型態可以底線`_`代表pattern matching的任意型態，由編譯器推導出；解構的變數也能以`_`來取代不需要的變數。
-- 索引： `<name>.n`，其中`n`代表index value。
+- 索引： `<name>.n`，其中`n`代表index value，從0開始。
+``` rust
+let tup = (20, 30.6, '早');
+let top : (i32, u64, f32);
+let (x, y, _) = tup;
+let z = tup.2;
+```
 
 ## 陣列
 - 宣告：`let <name> [: [type ; number]] = <[value1, value2, ...]> ;` 或是`let <name> : [<type> ; <number>]`，其中`number`代表元素個數。
@@ -33,5 +38,17 @@ const pi : f64 = 3.14159;
 ## 註解
 只有以`//`開始的單行註解。
 
+## 條件判斷
+- 形式：`if <expr> {...} [else <expr> {...}]`
+- 以`else if`處理多重條件
+- `if`本身可以是個運算式。
+
+## 迴圈
+- 形式有三種：`loop`、`while`與`for`。
+- `loop`可以是個運算式，接在`break`後，`;`前的運算式是`loop`的回傳值。
+- 形式：
+  - `loop {...}`，以`break`離開或陷入無窮迴圈中
+  - `while condition {...}`
+  - `for <name> in <Collection> {...}`
 
 回到[目錄](./../README.md)
