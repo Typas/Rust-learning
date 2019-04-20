@@ -11,5 +11,10 @@
 - [Extra Notes](./chapter3/extra.md)
 
 ## Chapter 4: Understanding Ownership
+- 4.1 [What is Ownership?](./chapter4/ownership.md)
+- 4.2 [References and Borrowing](./chapter4/reference.md)
+- 4.3 [The Slice Type](./chapter4/slice.md)
+
+## Chapter 5: Using Structs to Structure Related Data
 
 
