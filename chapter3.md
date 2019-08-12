@@ -1,4 +1,4 @@
-# Extra notes
+# Notes
 以下`<argument>`代表必須的參數，`[optional]`代表選填的參數，`, ...`表示前面參數的列舉。
 `expr`代表運算式，`...`代表敘述，`type`代表型態，`value`代表值，`name`代表變數名稱。
 Rust宣告可以無初始值，但同時須指定資料型態。
