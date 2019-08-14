@@ -17,9 +17,9 @@ const pi : f64 = 3.14159;
 ```
 
 ## Tuple
-- 宣告：`let <name> [: (type1, type2, ...)] = <(var1, var2, ...)> ;`或`let <name> : <(type1, type2, ...)> ;`。
+- 宣告：`let <name> [: (<type1>, <type2>, ...)] = (<var1>, <var2>, ...) ;`或`let <name> : (<type1>, <type2>, ...) ;`。
 - 解構： `let (<name1>, <name2>, ...) = <tuple_name> ;`。其中的型態可以底線`_`代表pattern matching的任意型態，由編譯器推導出；解構的變數也能以`_`來取代不需要的變數。
-- 索引： `<name>.n`，其中`n`代表index value，從0開始。
+- 索引： `<name>.<n>`，其中`n`代表index value，從0開始。
 ``` rust
 let tup = (20, 30.6, '早');
 let top : (i32, u64, f32);
@@ -29,7 +29,7 @@ let z = tup.2;
 
 ## 陣列
 - 宣告：`let <name> [: [type ; number]] = <[value1, value2, ...]> ;` 或是`let <name> : [<type> ; <number>]`，其中`number`代表元素個數。
-- 存取： `<name>[n]`，其中`n`代表index value。
+- 存取： `<name>[<n>]`，其中`n`代表index value。
 
 ## 函式
 - 宣告：`fn <name>([name1 : type1, name2 : type2, ...]) [-> type] {...}`
@@ -51,4 +51,4 @@ let z = tup.2;
   - `while condition {...}`
   - `for <name> in <Collection> {...}`
 
-回到[目錄](./../README.md)
+回到[目錄](./README.md)
