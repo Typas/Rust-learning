@@ -52,7 +52,7 @@ fn change(some_string: &mut String) {}
 - 語法為`&variable[start..end]`
 - 開頭預設為整段資料的開頭(0)
 - 結尾預設為整段資料的結尾
-```
+``` rust
 let another = &s[..]; // equiv &s
 ```
 
