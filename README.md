@@ -6,4 +6,17 @@
 * [Chapter 4](./chapter4.md): Understanding Ownership
 * [Chapter 5](./chapter5.md): Using Structs to Structure Related Data
 * [Chapter 6](./chapter6.md): Enums and Pattern Matching
-
+* [Chapter 7](./chapter7.md): Managing Growing Projects with Packages, Crates, and Modules
+* [Chapter 8](./chapter8.md): Common Collections
+* [Chapter 9](./chapter9.md): Error Handling
+* [Chapter 10](./chapter10.md): Generic Types, Traits, and Lifetimes
+* [Chapter 11](./chapter11.md): Writing Automated Tests (Not Done)
+* [Chapter 12](./chapter12.md): An I/O Project: Building a Command Line Program (Not Done)
+* [Chapter 13](./chapter13.md): Functional Language Features: Iterators and Closures (Not Done)
+* [Chapter 14](./chapter14.md): More about Cargo and Crates.io (Not Done)
+* [Chapter 15](./chapter15.md): Smart Pointers (Not Done)
+* [Chapter 16](./chapter16.md): Fearless Concurrency (Not Done)
+* [Chapter 17](./chapter17.md): Object Oriented Programming Features of Rust (Not Done)
+* [Chapter 18](./chapter18.md): Patterns and Matching (Not Done)
+* [Chapter 19](./chapter19.md): Advanced Features (Not Done)
+* [Chapter 20](./chapter20.md): Final Project: Building a Multithreaded Web Server
