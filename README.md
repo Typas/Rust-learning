@@ -12,7 +12,7 @@
 * [Chapter 10](./chapter10.md): Generic Types, Traits, and Lifetimes
 * [Chapter 11](./chapter11.md): Writing Automated Tests
 * [Chapter 12](./chapter12.md): An I/O Project: Building a Command Line Program
-* [Chapter 13](./chapter13.md): Functional Language Features: Iterators and Closures (Not Done)
+* [Chapter 13](./chapter13.md): Functional Language Features: Iterators and Closures
 * [Chapter 14](./chapter14.md): More about Cargo and Crates.io (Not Done)
 * [Chapter 15](./chapter15.md): Smart Pointers (Not Done)
 * [Chapter 16](./chapter16.md): Fearless Concurrency (Not Done)
