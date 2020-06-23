@@ -10,8 +10,8 @@
 * [Chapter 8](./chapter8.md): Common Collections
 * [Chapter 9](./chapter9.md): Error Handling
 * [Chapter 10](./chapter10.md): Generic Types, Traits, and Lifetimes
-* [Chapter 11](./chapter11.md): Writing Automated Tests (Not Done)
-* [Chapter 12](./chapter12.md): An I/O Project: Building a Command Line Program (Not Done)
+* [Chapter 11](./chapter11.md): Writing Automated Tests
+* [Chapter 12](./chapter12.md): An I/O Project: Building a Command Line Program
 * [Chapter 13](./chapter13.md): Functional Language Features: Iterators and Closures (Not Done)
 * [Chapter 14](./chapter14.md): More about Cargo and Crates.io (Not Done)
 * [Chapter 15](./chapter15.md): Smart Pointers (Not Done)
