@@ -179,7 +179,7 @@ mod tests {
     struct MockMessenger {
         sent_messages: RefCell<Vec<String>>,
     }
-// --snip
+// --snip--
 ```
 
 ## 智慧型指標的選擇
