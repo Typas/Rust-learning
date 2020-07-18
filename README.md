@@ -16,7 +16,7 @@
 * [Chapter 14](./chapter14.md): More about Cargo and Crates.io
 * [Chapter 15](./chapter15.md): Smart Pointers
 * [Chapter 16](./chapter16.md): Fearless Concurrency
-* [Chapter 17](./chapter17.md): Object Oriented Programming Features of Rust (Not Done)
+* [Chapter 17](./chapter17.md): Object Oriented Programming Features of Rust
 * [Chapter 18](./chapter18.md): Patterns and Matching (Not Done)
 * [Chapter 19](./chapter19.md): Advanced Features (Not Done)
 * [Chapter 20](./chapter20.md): Final Project: Building a Multithreaded Web Server
