@@ -55,7 +55,7 @@ impl AveragedCollection {
 
 ## Inheritance 繼承
 
-Rust沒有繼承。會使用繼承的主因是程式碼的重複使用，而在rust中可以用trait來解決這個問題。
+Rust沒有繼承。會使用繼承的主因是程式碼的重複使用，而在Rust中可以用trait來解決這個問題。
 
 ## Polymorphism 多型
 
@@ -99,7 +99,7 @@ impl Screen {
 
 ## 物件導向設計模式
 
-有一種設計模式是state pattern狀態模式。在rust中有兩種解法，一種是在結構使用trait object表示狀態，另一種是使用不同型態與其函式回傳值。
+有一種設計模式是state pattern狀態模式。在Rust中有兩種解法，一種是在結構使用trait object表示狀態，另一種是使用不同型態與其函式回傳值。
 
 使用trait object的樣式：
 ``` rust
@@ -160,7 +160,7 @@ impl State for Final {
 ```
 
 使用不同型態的樣式：
-```rust
+``` rust
 pub struct Foo {
     content: String,
 }

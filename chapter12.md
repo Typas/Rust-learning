@@ -30,7 +30,7 @@ let contents = fs::read_to_string(filename)
 
 以`env::var()`取得環境變數。以`is_err()`確認變數是否存在，不存在為true。
 
-```rust
+``` rust
 use std::env;
 
 let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
