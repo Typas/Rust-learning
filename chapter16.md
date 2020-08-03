@@ -110,7 +110,7 @@ fn main() {
 }
 ```
 
-其中的`Arc::clone(&counter)`可以`counter.clone()`替代。
+其中的`Arc::clone(&counter)`可以用`counter.clone()`替代。
 `Arc<T>`對應到`Rc<T>`，而`Mutex<T>`則對應到`RefCell<T>`。
 `Arc<T>`的潛在風險與`Rc<T>`相同，有循環參考的問題；`Mutex<T>`與其他語言中的mutex一樣，有造成死鎖的可能性，`MutexGuard`能提供一些資訊。
 

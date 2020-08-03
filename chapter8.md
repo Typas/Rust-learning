@@ -183,7 +183,7 @@ for c in "नमस्ते".chars() {
 用`bytes`則是取得每個byte的數值，但有長於一個byte的UTF-8字元。
 
 ## Hash Map
-因為使用頻率相對低所以被被包在預載的函式庫中。
+因為使用頻率相對低所以不被包在預載的函式庫中。
 
 ``` rust
 use std::collections::HashMap;

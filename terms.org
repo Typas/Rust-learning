@@ -1,0 +1,128 @@
+#+TITLE: 名詞翻譯
+
+* 無翻譯專有名詞
+- Rust
+- stack
+- heap
+- Cargo
+- crate
+- collection
+- vector
+- hash map
+- panic
+- graph
+- edge
+- node
+- mutex
+
+* 翻譯對照表
+
+| 英文名詞               | 中文翻譯     |
+|------------------------+--------------|
+| abstract               | 抽象化       |
+| access                 | 存取         |
+| address                | 位址         |
+| allocate               | 配置         |
+| annotation             | 標註         |
+| append                 | 附加         |
+| argument               | 引數         |
+| arm                    | 對應分支     |
+| array                  | 陣列         |
+| assert                 | 斷言         |
+| associated             | 關聯         |
+| backtrace              | 回溯         |
+| borrow                 | 借用         |
+| borrow checker         | 借用檢查器   |
+| branch                 | 分支         |
+| build                  | 組建         |
+| clause                 | 從屬式       |
+| closure                | 閉包         |
+| comment                | 註解         |
+| compiler               | 編譯器       |
+| concatenation          | 連接         |
+| concurrency            | 並行處理     |
+| condition              | 條件式       |
+| constant               | 常數         |
+| dangling pointer       | 搖曳指標     |
+| dangling reference     | 搖曳參照     |
+| data race              | 資料競爭     |
+| deadlock               | 死鎖         |
+| debug                  | 除錯         |
+| declarative macro      | 宣告式巨集   |
+| declare                | 宣告         |
+| deref coercion         | 強解參照     |
+| dereference            | 解參照       |
+| design pattern         | 設計模式     |
+| drop                   | 丟棄         |
+| duplication            | 重工         |
+| enumeration            | 列舉         |
+| expression             | 運算式       |
+| fully qualified syntax | 完全限定語法 |
+| function               | 函數         |
+| generic                | 泛用         |
+| generic type           | 泛型         |
+| glob operator          | 萬用運算子   |
+| immutable              | 不可變的     |
+| index                  | 索引         |
+| instance               | 實例         |
+| interior mutability    | 內部可變性   |
+| irrefutability         | 不可駁       |
+| item                   | 項目         |
+| iterate                | 迭代         |
+| iterator               | 迭代器       |
+| library                | 函式庫       |
+| lifetime               | 生命期       |
+| literal                | 文字值       |
+| loop                   | 迴圈         |
+| macro                  | 巨集         |
+| match                  | 配對         |
+| match guard            | 配對防護     |
+| memory leak            | 記憶體洩露   |
+| metadata               | 元資料       |
+| method                 | 方法         |
+| mock object            | 模擬物件     |
+| module                 | 模組         |
+| move                   | 移交         |
+| mutable                | 可變的       |
+| newtype pattern        | 新型態模式   |
+| object oriented        | 物件導向     |
+| object safety          | 物件安全性   |
+| operator               | 運算子       |
+| orphan rule            | 孤兒法則     |
+| overhead               | 額外開銷     |
+| owner                  | 擁有者       |
+| ownership              | 所有權       |
+| package                | 組件         |
+| parallelism            | 平行處理     |
+| parameter              | 參數         |
+| path                   | 路徑         |
+| pattern                | 模式         |
+| placeholder            | 占位符       |
+| primitive              | 原生         |
+| privacy boundary       | 隱私邊界     |
+| private                | 私用         |
+| procedural macro       | 程序式巨集   |
+| profile                | 設定檔       |
+| propagate              | 傳遞         |
+| public                 | 公用         |
+| raw pointer            | 原始指標     |
+| recursive              | 遞迴         |
+| reference              | 參照         |
+| reference counting     | 參照計數     |
+| reference cycle        | 循環參照     |
+| refutablility          | 可駁性       |
+| shadowing              | 遮蔽         |
+| slice                  | 切片         |
+| smart pointer          | 智慧型指標   |
+| statement              | 敘述式       |
+| string                 | 字串         |
+| struct                 | 結構         |
+| supertrait             | 上級特徵     |
+| test double            | 測試替身     |
+| thread                 | 執行緒       |
+| trait                  | 特徵         |
+| trait object           | 特徵物件     |
+| tuple                  | 元組         |
+| type                   | 型態         |
+| variable               | 變數         |
+| workspace              | 工作區       |
