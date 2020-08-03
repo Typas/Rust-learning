@@ -1,19 +1,19 @@
 #+TITLE: 名詞翻譯
 
 * 無翻譯專有名詞
-- Rust
-- stack
-- heap
 - Cargo
-- crate
+- Rust
 - collection
-- vector
-- hash map
-- panic
-- graph
+- crate
 - edge
-- node
+- graph
+- hash map
+- heap
 - mutex
+- node
+- panic
+- stack
+- vector
 
 * 翻譯對照表
 
