@@ -31,6 +31,7 @@
 | assert                 | 斷言         |
 | associated             | 關聯         |
 | backtrace              | 回溯         |
+| block                  | 區段         |
 | borrow                 | 借用         |
 | borrow checker         | 借用檢查器   |
 | branch                 | 分支         |

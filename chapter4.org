@@ -17,7 +17,7 @@ let s2 = s1.clone();
   #+END_SRC
 
 * 函數
-- 參數等同於使用 === 對資料的操作，轉移所有權到參數上
+- 參數等同於使用 ~=~ 對資料的操作，轉移所有權到參數上
 - 回傳會轉移所有權
 
 ** 借用
@@ -36,5 +36,44 @@ let len = calculate_length(&s1);
   #+END_SRC
 
 *** 可變參照
+- 函數的參數與使用時皆加上 =mut= ，傳入的變數必須為 =mut= 。
+
+  #+BEGIN_SRC rust
+let mut s = String::from("hello");
+change(&mut s);
+
+fn change(some_string: &mut String) {}
+  #+END_SRC
+
+** 多重參照
+- 同時可以有多個不變參照
+- 可變參照只能有一個，且不能同時有不變參照。
+- 可用區段做出生命期的區別，避免資料競爭。
+
+* 切片型態
+- 切片是一段資料的參照
+- 語法為 =&var[start..end]=
+- 開頭預設為整段資料的開頭 (0)
+- 結尾預設為整段資料的結尾後
+  #+BEGIN_SRC rust
+let another = &s[..]; // equiv &s
+  #+END_SRC
+
+** 字串切片
+#+BEGIN_SRC rust
+let s = "Hello, world!";
+#+END_SRC
+
+- `s`的型態為 =&str= ，是字串切片的型態。
+- 函數的參數型態為 =&str= 時，傳入 =String= 型態也能正常運作。
+
+** 其他型態的切片
+#+BEGIN_SRC rust
+let a = [1, 2, 3, 4, 5];
+let slice = &a[1..3];
+#+END_SRC
+
+- =slice= 的型態為 =&[i32]=
+- =a= 的型態為 =[i32]=
 
 * 回[[file:README.md][目錄]]
