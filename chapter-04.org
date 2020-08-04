@@ -1,15 +1,15 @@
 #+TITLE: 所有權
 
 * 記憶體配置
-- 區段以 ={}= 包覆
-- 結束區段時自動呼叫 =drop= 函數清理動態配置的記憶體
+- 區段以 ~{}~ 包覆
+- 結束區段時自動呼叫 ~drop~ 函數清理動態配置的記憶體
 
 * ~=~ 對資料的操作
-- 有 =Copy= 特徵的資料直接複製
+- 有 ~Copy~ 特徵的資料直接複製
 - 其他資料轉移所有權，舊變數無效
 
 * 對變數進行深度複製
-- 使用 =clone= 函數複製 heap 資料
+- 使用 ~clone()~ 方法複製 heap 資料
 
   #+BEGIN_SRC rust
 let s1 = String::from("hello");
@@ -38,7 +38,7 @@ let len = calculate_length(&s1);
 #+END_SRC
 
 *** 可變參照
-- 函數的參數與使用時皆加上 =mut= ，傳入的變數必須為 =mut= 。
+- 函數的參數與使用時皆加上 ~mut~ ，傳入的變數必須為 ~mut~ 。
 
 #+BEGIN_SRC rust
 let mut s = String::from("hello");
@@ -54,7 +54,7 @@ fn change(some_string: &mut String) {}
 
 * 切片型態
 - 切片是一段資料的參照
-- 語法為 =&var[start..end]=
+- 語法為 ~&var[start..end]~
 - 開頭預設為整段資料的開頭 (0)
 - 結尾預設為整段資料的結尾後
 
@@ -67,8 +67,8 @@ let another = &s[..]; // equiv &s
 let s = "Hello, world!";
 #+END_SRC
 
-- `s`的型態為 =&str= ，是字串切片的型態。
-- 函數的參數型態為 =&str= 時，傳入 =String= 型態也能正常運作。
+- `s`的型態為 ~&str~ ，是字串切片的型態。
+- 函數的參數型態為 ~&str~ 時，傳入 ~String~ 型態也能正常運作。
 
 ** 其他型態的切片
 
@@ -77,7 +77,7 @@ let a = [1, 2, 3, 4, 5];
 let slice = &a[1..3];
 #+END_SRC
 
-- =slice= 的型態為 =&[i32]=
-- =a= 的型態為 =[i32]=
+- ~slice~ 的型態為 ~&[i32]~
+- ~a~ 的型態為 ~[i32]~
 
 * 回[[file:README.md][目錄]]

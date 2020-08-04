@@ -1,9 +1,8 @@
 #+TITLE: 列舉
 
 * 列舉的定義
-- 以關鍵字 =enum= 開始，大括號內定義每個列舉
-- 列舉形式： =<name>[(type1, type2...)]=
-- 每個列舉視同一個 =struct=
+- 以關鍵字 ~enum~ 開始，大括號內定義每個列舉
+- 列舉形式： ~<name>[(type1, type2...)]~
 
 #+BEGIN_SRC rust
 enum IpAddr {
@@ -12,10 +11,10 @@ enum IpAddr {
 }
 #+END_SRC
 
-* =Option= 列舉
-Rust 以 =Option<T>= 來避免 C/C++ 中的 =NULL= 所造成的問題。
-- =Option<T>= 與 =T= 型態不同，需要經過對應轉換。
-- Rust 用 =None= 來代替 C/C++ 中的 =NULL=
+* ~Option~ 列舉
+Rust 以 ~Option<T>~ 來避免 C/C++ 中的 ~NULL~ 所造成的問題。
+- ~Option<T>~ 與 ~T~ 型態不同，需要經過配對轉換。
+- Rust 用 ~None~ 來代替 C/C++ 中的 ~NULL~
 
 ** 定義
 
@@ -35,7 +34,7 @@ let absent_num: Option<i32> = None;
 
 * 配對
 - 在配對中，需要列出所有模式的配對。
-- 對於只需要處理單一種的情況，可以用 =if let= 。
+- 對於只需要處理單一種的情況，可以用 ~if let~ 。
 
 ** 使用方法
 
@@ -52,10 +51,10 @@ match var_enum {
 #+END_SRC
 
 ** 占位符
-- 配對中可以用一個 =_= 代表所有未列出的情況
-- 對應的敘述可以用 =()= 代表空敘述
+- 配對中可以用一個 ~_~ 代表所有未列出的情況
+- 對應的敘述可以用 ~()~ 代表空敘述
 
-* =if let=
+* ~if let~
 - 簡化流程控制
 - 缺點是編譯器不會確認每個狀況是否對應到
 
@@ -67,7 +66,7 @@ if let Some(3) = some_u8_value {
 }
 #+END_SRC
 
-與下面 =match= 敘述相同：
+與下面配對敘述相同：
 
 #+BEGIN_SRC rust
 match some_u8_value {

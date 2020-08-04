@@ -1,8 +1,8 @@
 #+TITLE: 結構
 
 * 結構的定義
-- 以關鍵字 =struct= 開始，大括號內定義每個欄位，以 =,= 分開。
-- 欄位形式： =<name>: <type>=
+- 以關鍵字 ~struct~ 開始，大括號內定義每個欄位，以 ~,~ 分開。
+- 欄位形式： ~<name>: <type>~
 
 #+BEGIN_SRC rust
 struct User {
@@ -15,11 +15,11 @@ struct User {
 
 * 宣告結構變數
 - 與一般宣告相同
-- ~=~ 後面接 =<structname> { <name1>: <value1>, ... }=
+- ~=~ 後面接 ~<structname> { <name1>: <value1>, ... }~
 
 ** 結構的更新語法
 - 能在建立新變數時複製舊變數的部份欄位
-- 以 =..<variable>= 複製未指定值的欄位
+- 以 ~..<variable>~ 複製未指定值的欄位
 
 #+BEGIN_SRC rust
 let var2 = Mystruct {
@@ -44,20 +44,20 @@ let var = Tup(1, 2);
 - 結構定義不能使用參照
 
 * 結構的除錯資訊
-- 檔頭需加上 =#[derive(Debug)]=
-- 能在 =println!()= 以 ={:?}= 輸出每個欄位的資訊
-- 以 ={:#?}= 輸出的除錯資訊有更好的排版
+- 檔頭需加上 ~#[derive(Debug)]~
+- 能在 ~println!()~ 以 ~{:?}~ 輸出每個欄位的資訊
+- 以 ~{:#?}~ 輸出的除錯資訊有更好的排版
 
 * 方法的定義
 - 與一般函數定義相同
-- 需包含在 =impl <StructName> {}= 的大括號之中
-- 第一個參數必為 =&self=
-- 以 =var.method()= 或 =StructName::method(&var)= 呼叫
-- =impl= 可以有多個
+- 需包含在 ~impl <StructName> {}~ 的大括號之中
+- 第一個參數必為 ~&self~
+- 以 ~var.method()~ 或 ~StructName::method(&var)~ 呼叫
+- ~impl~ 可以有多個
 
 * 關聯函數
-- 包含在 =impl <StructName> {}= 的大括號之中
-- 參數沒有 =&self=
-- 以 =StructName::asso_fn()= 呼叫
+- 包含在 ~impl <StructName> {}~ 的大括號之中
+- 參數沒有 ~&self~
+- 以 ~StructName::asso_fn()~ 呼叫
 
 回到[[file:README.md][目錄]]
