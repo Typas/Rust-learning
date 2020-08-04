@@ -1,8 +1,8 @@
 #+TITLE: 所有權
 
 * 記憶體配置
-- 區塊以 ={}= 包覆
-- 結束區塊時自動呼叫 =drop= 函式清理動態配置的記憶體
+- 區段以 ={}= 包覆
+- 結束區段時自動呼叫 =drop= 函式清理動態配置的記憶體
 
 * ~=~ 對資料的操作
 - 有 =Copy= 特徵的資料直接複製
@@ -22,6 +22,7 @@ let s2 = s1.clone();
 
 ** 借用
 - 函數的參數使用參照，不轉移所有權。
+
   #+BEGIN_SRC rust
 fn calculate_length(s: &String) -> usize
 {
@@ -30,6 +31,7 @@ fn calculate_length(s: &String) -> usize
   #+END_SRC
 
 - 使用時一樣要寫上參照
+
   #+BEGIN_SRC rust
 let s1 = String::from("hello");
 let len = calculate_length(&s1);
@@ -55,6 +57,7 @@ fn change(some_string: &mut String) {}
 - 語法為 =&var[start..end]=
 - 開頭預設為整段資料的開頭 (0)
 - 結尾預設為整段資料的結尾後
+
   #+BEGIN_SRC rust
 let another = &s[..]; // equiv &s
   #+END_SRC
@@ -68,6 +71,7 @@ let s = "Hello, world!";
 - 函數的參數型態為 =&str= 時，傳入 =String= 型態也能正常運作。
 
 ** 其他型態的切片
+
 #+BEGIN_SRC rust
 let a = [1, 2, 3, 4, 5];
 let slice = &a[1..3];
