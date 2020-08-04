@@ -1,0 +1,40 @@
+#+TITLE: 函數式語法
+
+* 閉包
+語法結構為 ~|var: Type| -> ReturnType { statements; expr }~ ，其中的 ~var~ 可以用占位符表示不需傳入參數，參數型態有時可省略，單行量敘或敘述可省略大括號。
+
+* ~Fn~ 特徵
+有這特徵的有函數、方法與閉包。這會結合到泛型的使用。其中 ~Fn~ 表示函數只使用不變方式借用外部變數； ~FnMut~ 表示函數使用可變方式借用外部變數； ~FnOnce~ 表示變數會從外部移交到函數內部。
+
+#+BEGIN_SRC rust
+struct Cacher<T>
+where T: Fn(u32) -> u32,
+{
+    calculation: T,
+    value: Option<u32>,
+}
+#+END_SRC
+
+* 迭代器
+
+** ~Iterator~ 特徵
+需要實作的方法為 ~next()~ 。實作後就可以 ~var.iter()~ 產出迭代器。
+
+#+BEGIN_SRC rust
+pub trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+#+END_SRC
+
+** 會拿走迭代器的方法
+在文件中第一個參數是 ~self~ 而無參照的方法。常見的有 ~count()~ 、 ~last()~ 、 ~collect()~ 、 ~max()~ 、 ~min()~ 、 ~sum()~ 。
+
+** 生成其他的迭代器
+必定會轉移迭代器的所有權，常見的有 ~map()~ 、 ~filter()~ 、 ~zip()~ 。
+
+** 效能
+使用迭代器的效能常比使用迴圈還高。
+
+* 回到[[file:README.md][目錄]]

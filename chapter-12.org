@@ -1,0 +1,34 @@
+#+TITLE: 輸入輸出
+
+* 接受程式參數
+需要用到 ~std::env~ 。其中 ~args[0]~ 必為程式自身。 ~env::args()~ 在接收到非法 Unicode 字元時會 panic ，如果有接收的必要則需以 ~env::args_os()~ 替代。
+
+#+BEGIN_SRC rust
+use std::env;
+
+let args: Vec<String> = env::args().collect();
+#+END_SRC
+
+* 讀取檔案
+需要 ~std::fs~ 。常用函數有 ~fs::write()~ 、 ~fs::read()~ 、 ~fs::read_to_string()~ 。
+
+#+BEGIN_SRC rust
+use std::fs;
+
+let contents = fs::read_to_string(filename)
+    .expect("Something went wrong reading the file");
+#+END_SRC
+
+* 輸出錯誤訊息
+以 ~eprintln!~ 巨集取代 ~println!~ 。
+
+* 取得環境變數
+以 ~env::var()~ 取得環境變數。以 ~is_err()~ 方法確認變數是否存在，不存在時為 ~true~ 。
+
+#+BEGIN_SRC rust
+use std::env;
+
+let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+#+END_SRC
+
+* 回到[[file:README.md][目錄]]

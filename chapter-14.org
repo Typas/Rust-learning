@@ -1,0 +1,140 @@
+#+TITLE: Crate 的自訂與發布
+
+* 自訂組建
+Cargo 有兩種設定檔，一種是執行 ~cargo build~ 時使用的 ~dev~ ，另一種是執行 ~cargo build --release~ 時使用的 ~release~ 。
+在 /Cargo.toml/ 中加入 ~[profile.*]~ 可以自訂任何你想要的設定檔，也能蓋過預設值。
+
+舉例來說， ~dev~ 與 ~release~ 設定檔的預設 ~opt-level~ 值為：
+
+#+BEGIN_SRC toml
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+#+END_SRC
+
+這個值的範圍為 0 到 3 ，值越小做的最佳化也越少，編譯的時間也會越短。
+
+* 發布到 Crates.io
+
+** 文件註解
+常見的註解是以 ~//~ 開頭，能轉譯成 HTML 文件的則是以 ~///~ 開頭的註解，稱為文件註解。
+這種註解能夠支援 Markdown 語法，程式區段的預設語言為 Rust 。
+這些文件能以 ~cargo doc~ 產生出來，而在後加上參數 ~--open~ 則可以順便在瀏覽器中打開。
+
+*** 常用標題
+除了最常用的 ~# Examples~ 以外，還有幾個也很常用：
+
+- *Panics:* 會標出函數在什麼時候會觸發 panic 機制。
+- *Errors:* 當函數回傳型態為 ~Result~ 時，在哪些情況下會回傳哪些錯誤。
+- *Safety:* 如果函數本身是 ~unsafe~ 的，需要有一段說明來解釋為什麼函數是 ~unsafe~ 的，還有函數所預期的環境。
+
+*** 文件測試
+所有在文件中的 Rust 程式碼在測試時也會一併編譯測試，以確保範例本身有跟上程式碼的更動。
+
+*** 包含項目的註解
+~//!~ 常用在整個 crate 的根檔案，預設為 /src/lib.rs/ 。主要用途是描述整個模組或 crate 是在做什麼的。
+
+** 方便的對外 API
+之前已經提過用 ~pub~ 公開函數與模組。
+不過因為程式碼架構可能很多層，如果引用時要用到 ~use my_crate::some_module::another_module::UsefulType~ 這麼長又這麼難記的路徑時，對使用者來說很不方便。
+~pub use~ 可以讓已經公開過的函數或模組能直接在表層就被引用，而不改變程式的架構。
+如果想用 ~use my_crate::UsefulType~ 來替代前面的長路徑時，可以在更上層的地方如 /src/lib.rs/ 使用 ~pub use~ 如下：
+
+#+BEGIN_SRC rust
+pub use self::some_module::another_module::UsefulType;
+#+END_SRC
+
+** 設定帳號
+在公開發表你的 crate 前，必須在 [[https://crates.io/][crates.io]] 先建立一個帳號並拿到 API token 。目前的 crates.io 是只能綁定 GitHub 帳號。當登入後，到 [[https://crates.io/me/][crates.io/me/]] 獲得你的 API key 。再在本機進行綁定：
+
+#+BEGIN_SRC sh
+cargo login myapikey12345
+#+END_SRC
+
+這個 API key 會存在 ~~/.cargo/credentials~ ，請注意這是一個密鑰，不能交給任何人。當不小心洩露時，請儘快重新取得 API key 。
+
+** 在 Crate 增加元資料
+Crates.io 上一個名稱只會對應到一個 crate ，所以沒辦法發布撞名的 crate 。在正式發布前，請先搜尋有沒有重複到名稱。
+如果有，你需要更改在 /Cargo.toml/ 裡 ~[package]~ 的名字，如下所示：
+
+#+BEGIN_SRC toml
+[package]
+name = "guessing game"
+#+END_SRC
+
+而 ~license~ 欄位則可以使用 [[https://spdx.org/licenses/][SPDX]] 裡的 /license identifier value/ 來直接指定授權，使用多個授權時中間則以 ~OR~ 隔開。
+最後你的 /Cargo.toml/ 應該會在正式發布前會長這樣：
+
+#+BEGIN_SRC toml
+[package]
+name = "guessing_game"
+version = "0.1.0"
+authors = ["0.1.0"]
+edition = "2018"
+description = "A fun game where you guess what number the computer has chosen."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+#+END_SRC
+
+** 公開發表
+使用 ~cargo publish~ 把整個 crate 給公開發表出去。每有一個新版本時，更改完 ~version~ 值後再用一次 ~cargo publish~ 就會更新版本。
+
+*** 移除在 Crates.io 的版本
+雖然你不能移除之前的 crate 版本，但是你可以預防未來的專案使用這些版本作為相依版本。
+~cargo yank~ 可以讓一個版本在已使用的專案仍相依於該版本，而防止新專案使用該版本。
+
+#+BEGIN_SRC sh
+cargo yank --vers 1.0.1
+#+END_SRC
+
+如果要再開放此版本的使用，則可以在後面再加上參數 ~--undo~ 來回復。
+
+#+BEGIN_SRC sh
+cargo yank --vers 1.0.1 --undo
+#+END_SRC
+
+* Cargo 工作區
+工作區是一組分享同一個 /Cargo.lock/ 與輸出目錄的組件。
+在工作區根目錄的 /Cargo.toml/ 不會有其他 /Cargo.toml/ 的`[package]`與其他元資料。
+而會以 ~[workspace]~ 開頭，描述整個工作區的組成。
+
+#+BEGIN_SRC toml
+[workspace]
+
+members = [
+    "adder",
+    "add-one",
+]
+#+END_SRC
+
+在之後用 ~cargo new adder~ 會作成一個共用 /target// 目錄的組件。 ~cargo new add-one --lib~ 則會建立一個新的函數庫。
+Cargo 並不會預設其內部的相依性，所以仍需手動指定，如在 *adder/Cargo.toml* ：
+
+#+BEGIN_SRC toml
+[dependencies]
+
+add-one = { path = "../add-one" }
+#+END_SRC
+
+如果要執行特定的組件，則需要以 ~-p~ 來指定：
+
+#+BEGIN_SRC sh
+cargo run -p adder
+#+END_SRC
+
+* 從 Crates.io 安裝程式
+~cargo install~ 能讓你從 crates.io 上安裝程式，如安裝 ~ripgrep~ ：
+
+#+BEGIN_SRC sh
+cargo install ripgrep
+#+END_SRC
+
+一般而言使用 rustup 安裝時都會在 ~$PATH~ 新增 ~$HOME/.cargo/bin~ ，如果是從系統安裝的可能要自行加上。
+
+* 自訂 Cargo 指令
+只要在 ~$PATH`~ 有執行檔的命名是 ~cargo-something~ ，就能用 ~cargo something~ 的指令執行。想知道有哪些指令可以用 ~cargo --list~ 查詢。
+
+* 回到[[file:README.md][目錄]]
