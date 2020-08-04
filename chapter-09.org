@@ -1,0 +1,176 @@
+#+TITLE: 錯誤處理
+
+* 無法回復的錯誤
+~panic!~ 是在程式出現無法回復的錯誤時使用的巨集。它會印出一個錯誤訊息，回溯並清除 stack ，然後結束。通常是用在設計者想不到要怎麼處理錯誤時使用。
+
+#+BEGIN_SRC rust
+fn main() {
+    panic!("crash and burn");
+}
+#+END_SRC
+
+** 回溯或中斷的選擇
+預設是在 panic 出現時，程式會回溯到每個正在用的函數。不過這很吃效能，有另一種方式是「中斷」，不清除而直接結束程式，此時程式所使用的記憶體會需要作業系統來清。如果想讓編譯出來的程式盡可能小的話，可以在 /Cargo.toml/ 中改寫 panic 的行為。
+
+#+BEGIN_SRC toml
+[profile.release]
+panic = 'abort'
+#+END_SRC
+
+** 回溯
+如果有設定環境變數 ~RUST_BACKTRACE=1~ 的話，在 ~panic!~ 作用後就可以看到一長串的回溯，會有包含標準函數庫，內建的，與你所使用的 crate 中所有正在使用 stack 的函數。
+
+* 可回復的錯誤
+~Result~ 是一個有兩種可能性的列舉，分別是 ~Ok~ 跟 ~Err~ ：
+
+#+BEGIN_SRC rust
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+#+END_SRC
+
+~T~ 跟 ~E~ 各是泛型參數，各自對應到一個型態，藉此來分辨處理成功與失敗的情況。
+
+** 範例
+開檔時所回傳的即為 ~Result~ ，結合配對可處理開檔錯誤時的情況。
+
+#+BEGIN_SRC rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => {
+            panic!("Problem opening the file: {:?}", error)
+        },
+    }
+}
+#+END_SRC
+
+** 不同錯誤的對應處理
+上面那個例子是只要出錯就用 ~panic!~ 處理，而實際情況常需要更細微的處理，如檔案覆寫等等。
+
+#+BEGIN_SRC rust
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            }
+            other_error => panic!("Problem opening the file: {:?}", other_error),
+        },
+    };
+}
+#+END_SRC
+
+如此巢狀配對，就能處理無舊檔時直接建立新檔的情況。第二行的 ~std::io::ErrorKind~ 是因為 ~File::open()~ 回傳的是 ~std::io::ErrorKind~ 這個列舉，所以需要引入。
+
+因為配對量敘常看起來很囉嗦，所以後面還有用閉包來簡化所寫的函數，如上面那段可以改寫如下：
+
+#+BEGIN_SRC rust
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let f = File::open("hello.txt").unwrap_or_else(|error| {
+        if error.kind() == ErrorKind::NotFound {
+            File::create("hello.txt").unwrap_or_else(|error| {
+                panic!("Problem creating the file: {:?}", error);
+            })
+        } else {
+            panic!("Problem opening the file: {:?}", error);
+        }
+    });
+}
+#+END_SRC
+
+這樣就可以專注在錯誤處理上，雖然還是很囉嗦。
+
+** 錯誤處理的捷徑
+錯誤處理上，配對夠用但是很囉嗦，而且不夠簡潔。 ~Result~ 型態提供了一些方法來簡化，但是只要出錯就會 panic 直接退出程式。
+
+*** ~unwrap~
+這個方法在 ~Result~ 變數的值是 ~Ok(val)~ 時，會回傳 ~val~ ；如果 ~Result~ 變數的值是 ~Err(e)~ 的時候，會直接呼叫 ~panic!~ 結束程式。
+
+#+BEGIN_SRC rust
+use std:fs::File;
+
+fn main() {
+    let f = File::open("hello.txt").unwrap();
+}
+#+END_SRC
+
+*** ~expect~
+功能上與 ~unwrap()~ 相同，不過多了一個參數，是 ~panic!~ 時顯示的錯誤訊息，以方便除錯。
+
+#+BEGIN_SRC rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt").expect("Failed to open hello.txt");
+}
+#+END_SRC
+
+** 傳遞錯誤
+如果函式發生錯誤，常常會需要回到呼叫函式的地方才處理，這時就該丟回去。
+
+#+BEGIN_SRC rust
+use std::io::{self, Read};
+use std::fs::File;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("hello.txt");
+
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => return Err(e),
+    };
+
+    let mut s = String::new();
+
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
+}
+#+END_SRC
+
+*** 語法糖 ~?~
+上面那段程式碼的配對很多而且重複性很高，可以改寫成這樣：
+
+#+BEGIN_SRC rust
+use std::io::{self, Read};
+use std::fs::File;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut f = File::open("hello.txt")?;
+    let mut s = String::new();
+    f.read_to_string(&mut s)?;
+    Ok(s)
+}
+#+END_SRC
+
+請注意 ~?~ 只會在出錯時回傳，所以需要在最後補上回傳值。而 ~?~ 會呼叫 ~from()~ 方法，需要有實作 ~From~ 特徵的結構才能用。
+也有更懶人的寫法，把上面的 ~open()~ 與 ~read_to_string()~ 串起來， ~?~ 一樣放在括號後。
+
+**** 侷限
+這個語法糖的限制條件為函數的回傳值必須是 ~Result~ 或 ~Option~ 型態，而且不可混用。
+
+* 錯誤可否回復的抉擇
+在寫雛型時， panic 是一個很好的錯誤處理預留方式。而要不要用 ~Result~ 則取決於你是否有比編譯器更多的資訊，也就是程式邏輯上需要考慮的事。而有下面三種情況之一，就該考慮使用 ~panic!~ ：
+
+- 錯誤狀況不是預期下會發生的事
+- 再來的程式碼需要在不會有這種錯誤情況下執行
+- 沒有一個好的方式來用目前所用的型態記錄這個資訊
+
+* 回到[[file:README.md][目錄]]
