@@ -130,3 +130,6 @@
 | type                   | 型態         |
 | variable               | 變數         |
 | workspace              | 工作區       |
+
+* Translation Credit
+- 量敘 - 月月

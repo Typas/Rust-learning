@@ -60,4 +60,4 @@ let var = Tup(1, 2);
 - 參數沒有 ~&self~
 - 以 ~StructName::asso_fn()~ 呼叫
 
-回到[[file:README.md][目錄]]
+* 回到[[file:README.md][目錄]]

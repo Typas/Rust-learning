@@ -6,7 +6,7 @@
 Cargo 的一個功能，能讓你組建，測試與分享 crate 。組件包含了 /Cargo.toml/ 描述如何組建這些 crate 。
 
 ** 限制
-一個組件只能有少於一個函數庫 crate ，但能有無限多個執行 crate 。
+一個組件只能有少於一個函數庫 crate ，但能有無限多個執行檔 crate 。
 
 ** 使用
 指令 ~cargo new~ 做出來的就是一個新組件。
@@ -23,8 +23,82 @@ rand = "0.5.5"
 
 * Crate
 
+** 定義
+一個提供函數庫或執行檔的模組樹。
+
+** 使用
+以 ~cargo new --lib~ 建立函數庫 crate，以 ~cargo new --bin~ 建立執行檔 crate。
+預設只有 /src/lib.rs/ 是函數庫 crate ，執行檔 crate 預設在 /src/bin.rs/ 或  /src/bin// ，裡面每個檔案都被視為是單獨的執行檔 crate 。
+
 * 模組
 
+** 定義
+與 ~use~ 連用，讓你控制路徑的組成、範圍與可見性。
+
+** 使用
+關鍵字為 ~mod~ ，以 ~{}~ 包裝，與一般函數相同。使用感覺很類似 C++ 的 ~namespace~ 。
+
+*** 檔案規則
+若分開模組的宣告與實作，則需要在 /src/lib.rs/ 中宣告 ~mod mod_name;~ ，再建立 /src/mod_name.rs/ 檔案與 /src/mod_name// 目錄。而在 /src/mod_name.rs/ 中只放其子模組的宣告。
+
+** ~use~
+類似於 C++ 中的 ~using~ ，也類似於檔案系統中的 symbolic link ，能簡化路徑的長度。
+
+#+BEGIN_SRC rust
+use path::to::module::StructName;
+#+END_SRC
+
+*** ~as~
+為路徑取別名，能避免重覆名稱的衝突。
+
+#+BEGIN_SRC rust
+use path::to::module::StructName as SN;
+#+END_SRC
+
+*** ~pub use~
+預設的 ~use~ 是私用的，只有在同個組件中才能用，若要讓外部的程式碼也能使用到這個捷徑，則需要寫成 ~pub use~ 。
+
+*** 巢狀路徑
+合併多個 ~use~ 以減少行數。如以下的程式碼：
+
+#+BEGIN_SRC rust
+use std::io;
+use std::io::Write;
+use std::cmp::Ordering;
+#+END_SRC
+
+可以縮為：
+
+#+BEGIN_SRC rust
+use std::{cmp::Ordering, io::{self, Write}};
+#+END_SRC
+
+*** 萬用運算子
+如果想要把路徑定義的所有公用項目帶進來，可以用萬用運算子 ~*~ 。
+但要注意，因為引用不明確，可能會造成除錯上的麻煩。
+
+#+BEGIN_SRC rust
+use std::collections::*;
+#+END_SRC
+
 * 路徑
+
+** 定義
+與檔案系統類似，是一個結構、函數或模組等項目的位置。
+
+** 使用
+分為絕對路徑與相對路徑。絕對路徑從 crate 名或 ~crate~ 開始；相對路徑從所在的模組開始，並用模組內的 ~self~ 、 ~super~ 或任何識別字來描述路徑。多個識別字之間以雙冒號 ~::~ 分隔，同 C++ 。
+
+*** ~super~
+概念類似檔案系統中的 ~..~ ，能存取上一層的項目。
+
+** 限制
+路徑中的任何模組都不能是私用的。
+
+*** 隱私邊界
+Rust 所有的項目，函數、方法、結構、列舉、模組與常數，預設都是私用。外層模組的項目不能用其內部模組的私用項目，但是內層的可以用外層的私用項目。項目前加上關鍵字 ~pub~ 可以把項目從私用轉換成公用。
+
+*** 結構與列舉的公用情況
+在結構前加上 ~pub~ 標示為公用後，其內部任何欄位與方法仍然維持為私用。若要公開內部的欄位或方法，則需要在該欄位或方法前也加上 ~pub~ 。列舉則是加上 ~pub~ 後，內部所有欄位都轉成公用。
 
 * 回到[[file:README.md][目錄]]
