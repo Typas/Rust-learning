@@ -64,6 +64,7 @@
 | field                  | 欄位         |
 | fully qualified syntax | 完全限定語法 |
 | function               | 函數         |
+| function signature     | 函數簽名     |
 | generic                | 泛用         |
 | generic type           | 泛型         |
 | glob operator          | 萬用運算子   |
@@ -128,6 +129,7 @@
 | test double            | 測試替身     |
 | thread                 | 執行緒       |
 | trait                  | 特徵         |
+| trait bound            | 特徵綁定     |
 | trait object           | 特徵物件     |
 | tuple                  | 元組         |
 | type                   | 型態         |
@@ -136,3 +138,5 @@
 
 * Translation Credit
 - 量敘 - 月月
+
+* 回到[[file:README.md][目錄]]

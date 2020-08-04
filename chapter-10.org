@@ -1,0 +1,362 @@
+#+TITLE: 泛用
+
+* 泛型
+
+** 用法
+
+*** 函數
+與 C++ 的 template 相同，以 ~<>~ 表示泛型。
+
+#+BEGIN_SRC rust
+fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
+    let mut largest = list[0]; // need trait implementation of std::Copy
+
+    for &item in list.iter() {
+        if item > largest { // need implementation of std::cmp::PartialOrd
+            largest = item;
+        }
+    }
+
+    largest
+}
+#+END_SRC
+
+*** 結構
+多個泛型間以 ~,~ 區隔，如函數參數。
+
+#+BEGIN_SRC rust
+struct Point<T, U> {
+    x: T,
+    y: U,
+}
+#+END_SRC
+
+*** 列舉
+列舉中以 ~()~ 包住型態。
+
+#+BEGIN_SRC rust
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+#+END_SRC
+
+*** 方法
+要在 ~impl~ 後加上 ~<>~ 表示泛型的實作。
+
+#+BEGIN_SRC rust
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Point<T> {
+    fn x(&self) -> &T {
+        &self.x
+    }
+}
+#+END_SRC
+
+如果只實作特定型態，則 ~impl~ 後不需加上泛型。
+
+#+BEGIN_SRC rust
+impl Point<f32> {
+    fn distance_from_origin(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+#+END_SRC
+
+~impl~ 後加上的泛型是指結構中概有的泛型，而非方法所用的泛型。
+
+#+BEGIN_SRC rust
+struct Point<T, U> {
+    x: T,
+    y: U,
+}
+
+impl<T, U> Point <T, U> {
+    fn mixup<V, W>(self, other: Point<V, W>) -> Point<T, W> {
+        Point {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+#+END_SRC
+
+** 效能
+在編譯期就會把所有泛型都編成實體型態，所以執行效率不會有差。
+
+* 特徵
+泛型是型態的抽象化，而特徵可說是方法的抽象化。
+
+#+BEGIN_SRC rust
+pub trait Summary {
+    fn summarize(&self) -> String;
+}
+#+END_SRC
+
+** 特徵實作
+只要結構中有包含某個特徵，則這個特徵的所有的要求方法都必須被實作出來。
+實作的限制為只能實作 crate 內的特徵，而不能實作外部特徵。這個限制被稱為程式的「連貫性」，或稱為「孤兒法則」。限制能確保沒有重複實作的可能性發生。
+
+#+BEGIN_SRC rust
+pub struct NewsArticle {
+    pub headline: String,
+    pub location: String,
+    pub author: String,
+    pub content: String,
+}
+
+impl Summary for NewsArticle {
+    fn summarize(&self) -> String {
+        format!("{}, by {} ({})", self.headline, self.author, self.location)
+    }
+}
+
+pub struct Tweet {
+    pub username: String,
+    pub content: String,
+    pub reply: bool,
+    pub retweet: bool,
+}
+
+impl Summary for Tweet {
+    fn summarize(&self) -> String {
+        format!("{}: {}", self.username, self.content)
+    }
+}
+#+END_SRC
+
+** 預設的實作
+特徵是能有預設實作的，而結構裡對該特徵的實作會蓋過其預設的實作。這與 C++ 的行為十分相近。而預設的實作，可以用同個特徵裡面沒有預設實作的方法。
+
+#+BEGIN_SRC rust
+pub trait Summary {
+    fn summarize_author(&self) -> String;
+
+    fn summarize(&self) -> String {
+        format!("(Read more from {}...)", self.summarize_author())
+    }
+}
+#+END_SRC
+
+** 特徵作為參數
+以特徵為參數時，實際傳入的仍是有實作特徵的結構的實例。這語法能把範圍限制在特徵的方法中，而不失泛用性。
+
+#+BEGIN_SRC rust
+pub fn notify(item: impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}
+#+END_SRC
+
+*** 特徵綁定
+~impl Trait~ 這個語法本身是一個語法糖。原型被稱為特徵綁定 ，長得跟 C++ 有八成像：
+
+#+BEGIN_SRC rust
+pub fn notify<T: Summary>(item: T) {
+    println!("Breaking news! {}", item.summarize());
+}
+#+END_SRC
+
+但是在有兩個以上特徵綁定出現時， ~impl Trait~ 預設會是不同的泛型。若需要強制全部為同一泛型，仍然需要使用此語法：
+
+#+BEGIN_SRC rust
+pub fn notify<T: Summary>(item1: T, item2: T) {}
+#+END_SRC
+
+*** 多個特徵的綁定
+用 ~+~ 來連接。
+
+#+BEGIN_SRC rust
+pub fn notify(item: impl Summary + Display) {}
+#+END_SRC
+
+*** 特徵綁定的 ~where~ 從屬式
+這也是語法糖，能讓多個特性綁定看起來比較不混亂：
+
+#+BEGIN_SRC rust
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32
+{
+    // --snip--
+}
+#+END_SRC
+
+以上的語法可以改成
+
+#+BEGIN_SRC rust
+fn some_function<T, U>(t: T, u: U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{
+    // --snip--
+}
+#+END_SRC
+
+** 回傳型態為特徵的實作
+同樣是為了維持泛用性而做出來的，參數型態是 ~impl Trait~ ，會回傳的則為其中一種型態的實例。
+要注意的是回傳值只能是同一種型別的實例，否則會因編譯器的限制而報錯。
+
+#+BEGIN_SRC rust
+fn returns_summarizable() -> impl Summary {
+    Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from("of course, as you probably already know, people"),
+        reply: false,
+        retweet: false,
+    }
+}
+#+END_SRC
+
+** 用特徵綁定來選擇性實作方法
+~impl~ 後的 ~<>~ 裡面也能用特徵綁定，未實作特性則不會實作此方法。
+
+#+BEGIN_SRC rust
+use std::fmt::Display;
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Pair<T> {
+    fn new(x: T, y: T) -> self {
+        self {
+            x,
+            y,
+        }
+    }
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
+    }
+}
+#+END_SRC
+
+* 生命期
+
+** 以生命期預防搖曳參照
+以下的程式碼因為有生命期問題，所以會被編譯器擋下來。
+
+#+BEGIN_SRC rust
+{
+    let r;
+
+    {
+        let x = 5;
+        r = &x;
+    } // x drops here
+
+    println!("r: {}", r);
+} // r drops here
+#+END_SRC
+
+** 借用檢查器
+借用的檢查規則為，借用者的生命期必須被包含在被借用者的生命期之內。
+
+** 函數中的泛用生命期
+參數中，參照是「借」來的，所以若回傳的值有包含借用，則必須標記其生命期為泛用的生命期。整個語言裡面最醜的語法。
+
+** 生命期標記
+在 ~'~ 後加上一個名字，與泛型類似，常見用法是 ~'a~ 。有保留字 ~'static~ 。
+
+#+BEGIN_SRC rust
+&i32        // 參照
+&'a i32     // 有顯式生命期的參照
+&'a mut i32 // 有顯式生命期的可變參照
+#+END_SRC
+
+*** 函數簽名的生命期標記
+跟泛型一樣，需要包含在 ~<>~ 之中。
+
+#+BEGIN_SRC rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+#+END_SRC
+
+*** 結構內的生命期標記
+結構中如果有參照，一定需要標記其生命期。
+
+#+BEGIN_SRC rust
+struct ImportantExcerpt<'a> {
+    part: &'a str,
+}
+
+fn main() {
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.').next()
+        .expect("Could not find a '.'");
+    let i = ImportantExcerpt { part: first_sentence };
+}
+#+END_SRC
+
+*** 方法中的生命期標記
+若結構內有生命期標記，則每個 ~impl~ 區段都需要加上泛型的參數。
+
+#+BEGIN_SRC rust
+impl<'a> ImportantExcerpt<'a> {
+    fn announce_and_return_part(&self, announcement: &str) -> &str {
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+}
+#+END_SRC
+
+*** 免標記情況
+在少數編譯器推導得出來的情況下，生命期標記語法是可省略的。
+像是回傳參數的切片：
+
+#+BEGIN_SRC rust
+fn first_word<'a>(s: &'a str) -> &'a str {
+    // --snip--
+}
+#+END_SRC
+
+可以被省略為
+
+#+BEGIN_SRC rust
+fn first_word(s: &str) -> &str {
+    // --snip--
+}
+#+END_SRC
+
+**** 省略規則
+1. 參數的參照之間的生命期不互相干擾
+2. 參數只有一個參照
+3. 參數其中一個是 ~&self~ 或 ~&mut self~ ，代表這是方法。
+
+** 靜態生命期
+標註為 ~'static~ 的參照，其生命期為整個程式的執行期。
+常數字串都能做 ~'static~ 參照。但是因為很貴，所以要謹慎考慮使用時機。
+
+** 泛型參數大亂鬥
+生命期的標記語法可以看成是一種泛型，所以也能做特徵綁定。
+
+#+BEGIN_SRC rust
+use std::fmt::Display;
+
+fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+    where T: Display
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+#+END_SRC
+
+* 回到[[file:README.md][目錄]]
