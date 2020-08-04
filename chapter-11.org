@@ -76,6 +76,11 @@ cargo test -- --show-output
 
 - 所有測試：預設值。
 - 特定測試：測試函數的名字有包含關鍵字時執行。
+
+#+BEGIN_SRC sh
+cargo test keyword
+#+END_SRC
+
 - 被忽略的：有加上 ~#[ignore]~ 屬性的測試函數可用以下指令執行，通常為耗時較久的測試。
 
 #+BEGIN_SRC sh
