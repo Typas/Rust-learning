@@ -14,21 +14,21 @@ let mut b = 60;
 * 常數
 - 宣告： =const <name>: <type> = <expr>;= 。
 
-  #+BEGIN_SRC rust
+#+BEGIN_SRC rust
 const PI: f64 = 3.14159;
-  #+END_SRC
+#+END_SRC
 
 * 元組
 - 宣告： =let <name>[: (<type1>, <type2>, ...)] = (<var1>, <var2>, ...);= 或 =let <name>: (<type1>, <type2>, ...);= 。
 - 解構：  =let (<name1>, <name2>, ...) = <tuple_name> ;= 。其中的型態可以用底線 =_= 代表模式配對的任意型態，由編譯器推導出；解構的變數也能以 =_= 來取代不需要的變數。
 - 索引： =<name>.<n>= ，其中 =n= 代表索引值，從 0 開始。
  
-  #+BEGIN_SRC rust
+#+BEGIN_SRC rust
 let tup = (20, 30.6, '早');
 let top: (i32, u64, f32);
 let (x, y, _) = tup;
 let z = tup.2;
-  #+END_SRC
+#+END_SRC
 
 * 陣列
 - 宣告： =let <name>[: [type; number]] = <[value1, value2, ...]>;=  或是 =let <name>: [<type> ; <number>];= ，其中 =number= 代表元素個數。
