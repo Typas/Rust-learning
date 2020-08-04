@@ -44,7 +44,7 @@
 | compiler               | 編譯器       |
 | concatenation          | 連接         |
 | concurrency            | 並行處理     |
-| condition              | 條件        |
+| condition              | 條件         |
 | constant               | 常數         |
 | dangling pointer       | 搖曳指標     |
 | dangling reference     | 搖曳參照     |
@@ -74,7 +74,7 @@
 | item                   | 項目         |
 | iterate                | 迭代         |
 | iterator               | 迭代器       |
-| library                | 函式庫       |
+| library                | 函數庫       |
 | lifetime               | 生命期       |
 | literal                | 文字值       |
 | loop                   | 迴圈         |

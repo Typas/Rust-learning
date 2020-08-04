@@ -1,0 +1,30 @@
+#+TITLE: Cargo 專案管理
+
+* 組件
+
+** 定義
+Cargo 的一個功能，能讓你組建，測試與分享 crate 。組件包含了 /Cargo.toml/ 描述如何組建這些 crate 。
+
+** 限制
+一個組件只能有少於一個函數庫 crate ，但能有無限多個執行 crate 。
+
+** 使用
+指令 ~cargo new~ 做出來的就是一個新組件。
+
+** 外部組件
+如果要在專案中使用一個外部組件，則要在 /Cargo.toml/ 中加入這個組件：
+
+#+BEGIN_SRC toml
+[dependencies]
+rand = "0.5.5"
+#+END_SRC
+
+標準函數庫也是外部組件，但是預設會加入。如果要簡化路徑一樣要用到 ~use~ ，標準函數庫的路徑以 ~std~ 開頭。
+
+* Crate
+
+* 模組
+
+* 路徑
+
+* 回到[[file:README.md][目錄]]

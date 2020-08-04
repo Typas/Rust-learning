@@ -15,11 +15,11 @@ struct User {
 
 * 宣告結構變數
 - 與一般宣告相同
-- ~=~ 後面接 ~<structname> { <name1>: <value1>, ... }~
+- ~=~ 後面接 ~<StructName> { <name1>: <value1>, ... }~
 
 ** 結構的更新語法
 - 能在建立新變數時複製舊變數的部份欄位
-- 以 ~..<variable>~ 複製未指定值的欄位
+- 以 ~..<var>~ 複製未指定值的欄位
 
 #+BEGIN_SRC rust
 let var2 = Mystruct {
