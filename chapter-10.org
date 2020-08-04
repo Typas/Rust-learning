@@ -67,7 +67,7 @@ impl Point<f32> {
 }
 #+END_SRC
 
-~impl~ 後加上的泛型是指結構中概有的泛型，而非方法所用的泛型。
+~impl~ 後加上的泛型是指結構中既有的泛型，而非方法所用的泛型。
 
 #+BEGIN_SRC rust
 struct Point<T, U> {
@@ -174,7 +174,7 @@ pub fn notify(item: impl Summary + Display) {}
 #+END_SRC
 
 *** 特徵綁定的 ~where~ 從屬式
-這也是語法糖，能讓多個特性綁定看起來比較不混亂：
+這也是語法糖，能讓多個特徵綁定看起來比較不混亂：
 
 #+BEGIN_SRC rust
 fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32
@@ -196,7 +196,7 @@ fn some_function<T, U>(t: T, u: U) -> i32
 
 ** 回傳型態為特徵的實作
 同樣是為了維持泛用性而做出來的，參數型態是 ~impl Trait~ ，會回傳的則為其中一種型態的實例。
-要注意的是回傳值只能是同一種型別的實例，否則會因編譯器的限制而報錯。
+要注意的是回傳值只能是同一種型態的實例，否則會因編譯器的限制而報錯。
 
 #+BEGIN_SRC rust
 fn returns_summarizable() -> impl Summary {
@@ -210,7 +210,7 @@ fn returns_summarizable() -> impl Summary {
 #+END_SRC
 
 ** 用特徵綁定來選擇性實作方法
-~impl~ 後的 ~<>~ 裡面也能用特徵綁定，未實作特性則不會實作此方法。
+~impl~ 後的 ~<>~ 裡面也能用特徵綁定，未實作特徵則不會實作此方法。
 
 #+BEGIN_SRC rust
 use std::fmt::Display;
