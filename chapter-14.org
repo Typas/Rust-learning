@@ -53,7 +53,7 @@ pub use self::some_module::another_module::UsefulType;
 cargo login myapikey12345
 #+END_SRC
 
-這個 API key 會存在 ~~/.cargo/credentials~ ，請注意這是一個密鑰，不能交給任何人。當不小心洩露時，請儘快重新取得 API key 。
+這個 API key 會存在 ~$HOME/.cargo/credentials~ ，請注意這是一個密鑰，不能交給任何人。當不小心洩露時，請儘快重新取得 API key 。
 
 ** 在 Crate 增加元資料
 Crates.io 上一個名稱只會對應到一個 crate ，所以沒辦法發布撞名的 crate 。在正式發布前，請先搜尋有沒有重複到名稱。
@@ -111,7 +111,7 @@ members = [
 #+END_SRC
 
 在之後用 ~cargo new adder~ 會作成一個共用 /target// 目錄的組件。 ~cargo new add-one --lib~ 則會建立一個新的函數庫。
-Cargo 並不會預設其內部的相依性，所以仍需手動指定，如在 *adder/Cargo.toml* ：
+Cargo 並不會預設其內部的相依性，所以仍需手動指定，如在 /adder/Cargo.toml/ ：
 
 #+BEGIN_SRC toml
 [dependencies]
@@ -135,6 +135,6 @@ cargo install ripgrep
 一般而言使用 rustup 安裝時都會在 ~$PATH~ 新增 ~$HOME/.cargo/bin~ ，如果是從系統安裝的可能要自行加上。
 
 * 自訂 Cargo 指令
-只要在 ~$PATH`~ 有執行檔的命名是 ~cargo-something~ ，就能用 ~cargo something~ 的指令執行。想知道有哪些指令可以用 ~cargo --list~ 查詢。
+只要在 ~$PATH~ 有執行檔的命名是 ~cargo-something~ ，就能用 ~cargo something~ 的指令執行。想知道有哪些指令可以用 ~cargo --list~ 查詢。
 
 * 回到[[file:README.md][目錄]]
