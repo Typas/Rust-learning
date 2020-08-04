@@ -4,10 +4,10 @@
 Rust 宣告可以無初始值，但宣告時須指定資料型態。並且要在後面有定義。
 
 * 變數
-- 宣告： =let [mut] <name> [: type] = <expr>;= 或是 =let [mut] <name> : <type>;= 。
+- 宣告： =let [mut] <name>[: type] = <expr>;= 或是 =let [mut] <name>: <type>;= 。
 
 #+BEGIN_SRC rust
-let a:i32;
+let a: i32;
 let mut b = 60;
 #+END_SRC
 
@@ -15,7 +15,7 @@ let mut b = 60;
 - 宣告： =const <name>: <type> = <expr>;= 。
 
   #+BEGIN_SRC rust
-const PI : f64 = 3.14159;
+const PI: f64 = 3.14159;
   #+END_SRC
 
 * 元組
@@ -48,10 +48,12 @@ let z = tup.2;
 
 * 迴圈
 - 形式有三種： =loop= 、 =while= 與 =for= 。
--  =loop= 可以是個運算式，接在 =break= 後的運算式是 =loop= 的回傳值。
-- 形式：
-  -  =loop { /* --snip-- */ }= ，以 =break= 離開或陷入無窮迴圈中
-  -  =while <expr> { /* --snip-- */ }=
-  -  =for <name> in <Collection> { /* --snip-- */ }=
+- =loop= 可以是個運算式，接在 =break= 後的運算式是 =loop= 的回傳值。
+- 其餘兩種都只能是表達式。
+
+** 形式
+- =loop { /* --snip-- */ }= ，以 =break= 離開或陷入無窮迴圈中
+- =while <expr> { /* --snip-- */ }=
+- =for <name> in <Collection> { /* --snip-- */ }=
 
 * 回到[[file:README.md][目錄]]
