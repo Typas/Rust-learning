@@ -3,6 +3,8 @@
 * 無翻譯專有名詞
 - Cargo
 - Rust
+- Option
+- Result
 - collection
 - crate
 - edge
@@ -42,7 +44,7 @@
 | compiler               | 編譯器       |
 | concatenation          | 連接         |
 | concurrency            | 並行處理     |
-| condition              | 條件式       |
+| condition              | 條件        |
 | constant               | 常數         |
 | dangling pointer       | 搖曳指標     |
 | dangling reference     | 搖曳參照     |
@@ -57,7 +59,8 @@
 | drop                   | 丟棄         |
 | duplication            | 重工         |
 | enumeration            | 列舉         |
-| expression             | 運算式       |
+| expression             | 量敘         |
+| field                  | 欄位         |
 | fully qualified syntax | 完全限定語法 |
 | function               | 函數         |
 | generic                | 泛用         |
@@ -115,7 +118,7 @@
 | shadowing              | 遮蔽         |
 | slice                  | 切片         |
 | smart pointer          | 智慧型指標   |
-| statement              | 敘述式       |
+| statement              | 敘述         |
 | string                 | 字串         |
 | struct                 | 結構         |
 | supertrait             | 上級特徵     |

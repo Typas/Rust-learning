@@ -1,0 +1,77 @@
+#+TITLE: 列舉
+
+* 列舉的定義
+- 以關鍵字 =enum= 開始，大括號內定義每個列舉
+- 列舉形式： =<name>[(type1, type2...)]=
+- 每個列舉視同一個 =struct=
+
+#+BEGIN_SRC rust
+enum IpAddr {
+    V4(u8, u8, u8, u8),
+    V6(String),
+}
+#+END_SRC
+
+* =Option= 列舉
+Rust 以 =Option<T>= 來避免 C/C++ 中的 =NULL= 所造成的問題。
+- =Option<T>= 與 =T= 型態不同，需要經過對應轉換。
+- Rust 用 =None= 來代替 C/C++ 中的 =NULL=
+
+** 定義
+
+#+BEGIN_SRC rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+#+END_SRC
+
+** 使用方法
+
+#+BEGIN_SRC rust
+let some_num = Some(5);
+let absent_num: Option<i32> = None;
+#+END_SRC
+
+* 配對
+- 在配對中，需要列出所有模式的配對。
+- 對於只需要處理單一種的情況，可以用 =if let= 。
+
+** 使用方法
+
+#+BEGIN_SRC rust
+match var_enum {
+    T::n1 => println!("1"),
+    T::n2 => println!("2"),
+    T::n3 => {
+        println!("3");
+        println!(", which is abnormal here.");
+    },
+    _ => (),
+}
+#+END_SRC
+
+** 占位符
+- 配對中可以用一個 =_= 代表所有未列出的情況
+- 對應的敘述可以用 =()= 代表空敘述
+
+* =if let=
+- 簡化流程控制
+- 缺點是編譯器不會確認每個狀況是否對應到
+
+** 使用方法
+
+#+BEGIN_SRC rust
+if let Some(3) = some_u8_value {
+    println!("three");
+}
+#+END_SRC
+
+與下面 =match= 敘述相同：
+
+#+BEGIN_SRC rust
+match some_u8_value {
+    Some(3) => println!("three"),
+    _ => (),
+}
+#+END_SRC
