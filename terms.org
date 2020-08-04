@@ -66,7 +66,8 @@
 | generic                | 泛用         |
 | generic type           | 泛型         |
 | glob operator          | 萬用運算子   |
-| immutable              | 不可變的     |
+| hash                   | 雜湊         |
+| immutable              | 不變的       |
 | index                  | 索引         |
 | instance               | 實例         |
 | interior mutability    | 內部可變性   |
@@ -79,6 +80,7 @@
 | literal                | 文字值       |
 | loop                   | 迴圈         |
 | macro                  | 巨集         |
+| map                    | 映射         |
 | match                  | 配對         |
 | match guard            | 配對防護     |
 | memory leak            | 記憶體洩露   |
