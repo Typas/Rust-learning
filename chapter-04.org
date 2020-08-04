@@ -23,29 +23,29 @@ let s2 = s1.clone();
 ** 借用
 - 函數的參數使用參照，不轉移所有權。
 
-  #+BEGIN_SRC rust
+#+BEGIN_SRC rust
 fn calculate_length(s: &String) -> usize
 {
     // calculation here
 }
-  #+END_SRC
+#+END_SRC
 
 - 使用時一樣要寫上參照
 
-  #+BEGIN_SRC rust
+#+BEGIN_SRC rust
 let s1 = String::from("hello");
 let len = calculate_length(&s1);
-  #+END_SRC
+#+END_SRC
 
 *** 可變參照
 - 函數的參數與使用時皆加上 =mut= ，傳入的變數必須為 =mut= 。
 
-  #+BEGIN_SRC rust
+#+BEGIN_SRC rust
 let mut s = String::from("hello");
 change(&mut s);
 
 fn change(some_string: &mut String) {}
-  #+END_SRC
+#+END_SRC
 
 ** 多重參照
 - 同時可以有多個不變參照
@@ -58,9 +58,9 @@ fn change(some_string: &mut String) {}
 - 開頭預設為整段資料的開頭 (0)
 - 結尾預設為整段資料的結尾後
 
-  #+BEGIN_SRC rust
+#+BEGIN_SRC rust
 let another = &s[..]; // equiv &s
-  #+END_SRC
+#+END_SRC
 
 ** 字串切片
 #+BEGIN_SRC rust
