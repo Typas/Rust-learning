@@ -18,5 +18,8 @@
 * [Chapter 16](./chapter-16.org): Fearless Concurrency
 * [Chapter 17](./chapter-17.org): Object Oriented Programming Features of Rust
 * [Chapter 18](./chapter-18.org): Patterns and Matching 
-* [Chapter 19](./chapter-19.org): Advanced Features (Not Done)
+* [Chapter 19](./chapter-19.org): Advanced Features
+* [Macros](./chapter-19-macro.org): Macros
 * [Chapter 20](./chapter-20.org): Final Project: Building a Multithreaded Web Server (no implementation)
+* [Terms](./terms.org): Translation of Terms
+* [Useful Crates](./de-facto-crates.org): Almost Standard Crates

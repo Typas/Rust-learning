@@ -1,0 +1,10 @@
+#+TITLE: 事實標準 Crate
+
+因為 Rust 傾向維持很小的標準函數庫，所以有很多事實上的標準函數庫會散落在 crates.io 中。如果有遺漏的，請開 issue 提醒我加入。
+
+| 名稱與連結  | 作者                      | 類型                                         | 備註       |
+|-------------+---------------------------+----------------------------------------------+------------|
+| [[https://crates.io/crates/lazy_static][lazy_static]] | Marvin Löbel              | no-std, rust-patterns, memory-management     |            |
+| [[https://crates.io/crates/num][num]]         | Rust Devs                 | no-std, algorithms, science, data structures |            |
+| [[https://crates.io/crates/num-derive][num-derive]]  | Rust Devs                 | science                                      | proc-macro |
+| [[https://crates.io/crates/rayon][rayon]]       | Josh Stone, Niko Matsakis | concurrency                                  |            |
