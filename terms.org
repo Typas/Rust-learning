@@ -47,8 +47,8 @@
 | concurrency            | 並行處理     |
 | condition              | 條件         |
 | constant               | 常數         |
-| dangling pointer       | 搖曳指標     |
-| dangling reference     | 搖曳參照     |
+| dangling pointer       | 不定指標     |
+| dangling reference     | 不定參照     |
 | data race              | 資料競爭     |
 | deadlock               | 死鎖         |
 | debug                  | 除錯         |
@@ -72,8 +72,8 @@
 | immutable              | 不變的       |
 | index                  | 索引         |
 | instance               | 實例         |
-| interior mutability    | 內部可變性   |
-| irrefutability         | 不可駁       |
+| interior mutability    | 內變性       |
+| irrefutability         | 不可駁性     |
 | item                   | 項目         |
 | iterate                | 迭代         |
 | iterator               | 迭代器       |
@@ -85,7 +85,7 @@
 | map                    | 映射         |
 | match                  | 配對         |
 | match guard            | 配對防護     |
-| memory leak            | 記憶體洩露   |
+| memory leak            | 記憶體洩漏   |
 | metadata               | 元資料       |
 | method                 | 方法         |
 | mock object            | 模擬物件     |
@@ -133,10 +133,12 @@
 | trait object           | 特徵物件     |
 | tuple                  | 元組         |
 | type                   | 型態         |
+| unsafe                 | 不安         |
 | variable               | 變數         |
 | workspace              | 工作區       |
 
 * Translation Credit
-- 量敘 - 月月
+- 量敘：月月
+- 不定：船
 
 * 回到[[file:README.md][目錄]]

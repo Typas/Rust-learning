@@ -242,7 +242,7 @@ impl<T: Display + PartialOrd> Pair<T> {
 
 * 生命期
 
-** 以生命期預防搖曳參照
+** 以生命期預防不定參照
 以下的程式碼因為有生命期問題，所以會被編譯器擋下來。
 
 #+BEGIN_SRC rust
