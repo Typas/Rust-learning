@@ -98,6 +98,7 @@
 | object oriented        | 物件導向     |
 | object safety          | 物件安全性   |
 | operator               | 運算子       |
+| operator overloading   | 運算子重載   |
 | orphan rule            | 孤兒法則     |
 | overhead               | 額外開銷     |
 | owner                  | 擁有者       |

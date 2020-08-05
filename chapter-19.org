@@ -1,0 +1,386 @@
+#+TITLE: 進階功能
+
+* 不安
+靜態分析本身很保守，對於不能保證安全性的程式碼，編譯器會一律拒絕通過。而有些場合是編寫者能擔保安全性的， ~unsafe~ 這個關鍵字便是標註此段程式碼是由編寫者所擔保安全，而非編譯器。
+
+** 特別權限
+不安可以想成像是 linux 的 ~sudo~ 一樣，是有些新的權限存在。
+
+- 對原始指標解參照
+- 呼叫不安函數或方法
+- 存取或改動靜態變數
+- 實作不安特徵
+- 存取 ~union~ 的欄位
+
+這些權限所對應到的是記憶體安全相關的檢查，其他如借用等安全檢查仍然會執行。原則是盡可能的縮小這些需要擔保的範圍，在除錯時就可以不用這麼大費周章。
+
+** 原始指標
+不變的原始指標型態是 ~*const T~ ，可變的是 ~*mut T~ 。原始指標相對於參照與智慧型指標有以下差異：
+
+- 允許多個可變或不變指標指向同一位置，以忽略借用規則。
+- 不保證指向合法的記憶體位址
+- 允許 null 存在
+- 沒有任何自動清理的實作
+
+建立原始指標本身是安全的，但解參照則是不安的。
+
+#+BEGIN_SRC rust
+let mut num = 5;
+
+let r1 = &num as *const i32;
+let r2 = &mut num as *mut i32;
+
+unsafe {
+    println!("r1 is: {}", *r1);
+    println!("r2 is: {}", *r2);
+}
+#+END_SRC
+
+以上程式碼等同於以下的 C 程式碼：
+
+#+BEGIN_SRC c
+int num = 5;
+
+const int * const r1 = &num;
+int * const r2 = &num;
+
+printf("r1 is: %d\n", *r1);
+printf("r2 is: %d\n", *r2);
+#+END_SRC
+
+** 不安函數
+只要想使用到不安函數就必須在不安區段內呼叫。
+
+#+BEGIN_SRC rust
+unsafe fn dangerous() {
+    // --snip--
+}
+
+fn main() {
+    unsafe {
+        dangerous();
+    }
+}
+#+END_SRC
+
+*** 內含不安程式碼的安全函數
+程式碼中使用 ~unsafe~ 有些時候是為了效率，有些時候是編譯器不夠聰明。當函數本身可以保證安全的時候，並不需要整個標記成 ~unsafe~ ，這種包裝不安程式碼的概念非常常見。舉例來說， ~split_at_mut()~ 這個方法，因為借用檢查不夠聰明的關係，並不能判斷對不同切片之間有沒有重疊，因此需要自行擔保。
+
+#+BEGIN_SRC rust
+use std::slice;
+
+fn main() {
+    let mut v = vec![1, 2, 3, 4, 5, 6];
+
+    let r = &mut v[..];
+
+    let (a, b) = split_at_mut(r, 3);
+
+    assert_eq!(a, &mut [1, 2, 3]);
+    assert_eq!(b, &mut [4, 5, 6]);
+}
+
+fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
+    let len = slice.len();
+    let ptr = slice.as_mut_ptr();
+
+    assert!(mid <= len);
+
+    unsafe {
+        (
+            slice::from_raw_parts_mut(ptr, mid),
+            slice::from_raw_parts_mut(ptr.add(mid), len - mid),
+        )
+    }
+}
+#+END_SRC
+
+** 跨語言函數
+有些時候，會需要用到其他語言寫的程式碼，Rust 有關鍵字 ~extern~ 來建立 FFI 存取其他語言的函數。而這些函數全是不安函數，必須在不安區段內使用。
+
+#+BEGIN_SRC rust
+extern "C" {
+    fn abs(input: i32) -> i32;
+}
+
+fn main() {
+    unsafe {
+        println!("Absoulute value of -3 according to C: {}", abs(-3));
+    }
+}
+#+END_SRC
+
+不過如果是提供給其他語言的函數，則不需要用到 ~unsafe~ 。只要用 ~extern~ 搭配 ~#[no_mangle]~ 屬性就可以了。
+
+#+BEGIN_SRC rust
+#[no_mangle]
+pub extern "C" fn call_from_c() {
+    println!("Just called a Rust function from C!");
+}
+#+END_SRC
+
+** 靜態變數
+靜態變數的生命期必為 ~'static~ 。不可變的靜態變數與常數很類似，不過靜態變數會有不變的記憶體位址，而常數則可能被複製到好幾個地方去。可變的靜態變數則需要在不安區段中使用。如果想初始化後作為常數使用，有 [[https://crates.io/crates/lazy_static][lazy-static]] 可以用。
+
+#+BEGIN_SRC rust
+static mut COUNTER: u32 = 0;
+
+fn add_to_count(inc: u32) {
+    unsafe {
+        COUNTER += inc;
+    }
+}
+
+fn main() {
+    add_to_count(3);
+
+    unsafe {
+        println!("COUNTER = {}", COUNTER);
+    }
+}
+#+END_SRC
+
+** 不安特徵
+實作就需要以 ~unsafe~ 標註，使用也同樣需放在不安區段內。
+
+#+BEGIN_SRC rust
+unsafe trait Foo {
+    // methods go here
+}
+
+unsafe impl Foo for i32 {
+    // method implementation go here
+}
+#+END_SRC
+
+** ~union~
+這東西是拿來跟 C 的 ~union~ 接的，一般情況下可以用列舉。
+
+* 進階特徵
+
+** 關聯型態
+關聯型態可以用來指定一些特徵方法所需的型態，最常見的是實作 ~Iterator~ 。其中的 ~Item~ 是關聯型態，它能接受其他型態，而且能限制實作的型態只有一個。
+
+#+BEGIN_SRC rust
+pub trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+#+END_SRC
+
+** 預設泛型參數
+語法是 ~<PlaceholderType=ConcreteType>~ ，例子像是用在運算子重載時。
+
+*** 宣告
+
+#+BEGIN_SRC rust
+trait Add<RHS=Self> {
+    type Output;
+
+    fn add(self, rhs: RHS) -> Self::Output;
+}
+#+END_SRC
+
+*** 實作
+
+#+BEGIN_SRC rust
+use std::ops::Add;
+
+struct Millimeters(u32);
+struct Meters(u32);
+
+impl Add for Millimeters {
+    type Output = Millimeters;
+
+    fn add(self, other: Millimeters) -> Millimeters {
+        Millimeters(self.0 + other.0)
+    }
+}
+
+impl Add<Meters> for Millimeters {
+    type Output = Millimeters;
+
+    fn add(self, other: Meters) -> Millimeters {
+        Millimeters(self.0 + (other.0 * 1000))
+    }
+}
+#+END_SRC
+
+*** 使用時機
+- 擴展型態，而不破壞原有的程式碼。
+- 允許特定情況的自訂，但大多情況沒自訂的必要時。
+
+** 完全限定語法
+這東西是在多個特徵有同一個名稱的關聯函數，並且都在同一個結構或列舉中實作時需要使用。
+
+#+BEGIN_SRC rust
+trait Animal {
+    fn baby_name() -> String;
+}
+
+struct Dog;
+
+impl Dog {
+    fn baby_name() -> String {
+        String::from("Spot")
+    }
+}
+
+impl Animal for Dog {
+    fn baby_name() -> String {
+        String::from("puppy")
+    }
+}
+
+fn main() {
+    println!("A baby dog is called a {}", Dog::baby_name());
+    println!("A baby dog is called a {}", <Dog as Animal>::baby_name());
+}
+#+END_SRC
+
+** 上級特徵
+當你的特徵需要其他特徵的實作時，這個特徵就被稱為上級特徵。如以下的 ~Student~ 與 ~ComSciStudent~ 就是上級特徵：
+
+#+BEGIN_SRC rust
+trait Person {
+    fn name(&self) -> String;
+}
+
+trait Student: Person {
+    fn university(&self) -> String;
+}
+
+trait Programmer {
+    fn fav_language(&self) -> String;
+}
+
+trait ComSciStudent: Programmer + Student {
+    fn git_username(&self) -> String;
+}
+
+fn com_sci_student_greeting(student: &dyn ComSciStudent) -> String {
+    format!(
+        "My name is {} and I attend {}. My Git username is {}.",
+        student.name(),
+        student.university(),
+        student.git_username(),
+    )
+}
+#+END_SRC
+
+** 新型態模式
+在 Rust 中有孤兒法則，要在一個型態實作特徵時必須滿足型態或特徵的定義是在該 crate 內。若兩者都為外部 crate 來的，則需要用一個元組結構包裝，稱為新型態模式。這種抽象化在 Rust 中不會造成執行時的額外開銷。
+
+#+BEGIN_SRC rust
+use std::fmt;
+
+struct Wrapper(Vec<String>);
+
+impl fmt::Display for Wrapper {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "[{}]", self.0.join(", "))
+    }
+}
+
+fn main() {
+    let w = Wrapper(vec![String::from("Hello"), String::from("world")]);
+    println!("w = {}", w);
+}
+#+END_SRC
+
+* 進階型態
+
+** 型態別名
+這創出來的型態與新型態模式的不同，前者使用上完全等價於原型態，而後者被視為是一種全新的型態。
+
+#+BEGIN_SRC rust
+type Kilometers = i32;
+
+let x: i32 = 5;
+let y: Kilometers = 5;
+
+println!("x + y = {}", x + y);
+#+END_SRC
+
+*** 用途
+這常被用來縮簡一些重複的長型態，以增加可讀性。
+
+#+BEGIN_SRC rust
+type Thunk = Box<dyn Fn() + Send + 'static>;
+
+let f: Thunk = Box::new(|| println!("hi"));
+
+fn takes_long_type(f: Thunk) {
+    // --snip--
+}
+
+fn returns_long_type() -> Thunk {
+    // --snip--
+}
+#+END_SRC
+
+** Never 型態
+Rust 中有非常特別的型態 ~!~ ，通常被稱作 never 型態。在配對中，這個型態會被當作是任意型態。因此當 never 型態與另一種型態混用時，編譯器會算出唯一的型態而不產生衝突。沒有回傳值的函數回傳的就是這個。
+
+** 動態大小的型態
+Rust 會需要在編譯時就知道型態的大小，而有一些型態的大小則只能在執行時知道，這些型態被稱為 dynamically sized types 動態大小型態，簡稱 DST 。 DST 本身的大小在編譯時未知，但其參照的大小則是已知：變數的位址，是一個固定長度的值；變數的大小，也是一個固定長度的值。其他型態的指標也與參照相同，有固定大小。最常見的 DST 是 ~str~ 與各種以 ~dyn~ 修飾的型態。在泛型中，預設會插入一個特徵 ~Sized~ 。要使用 DST ，除了用這些包裝外，也能用 ~?Sized~ 來解除限制。
+下面程式碼的前兩者是一樣的，而第三種則是表達參數的大小可能不固定，只有第三種可以使用 DST 作為泛型參數。
+
+#+BEGIN_SRC rust
+fn generic<T>(t: T) {
+    // ---snip---
+}
+
+fn generic<T: Sized>(t: T) {
+    // ---snip---
+}
+
+fn generic<T: ?Sized>(t: T) {
+    // ---snip---
+}
+#+END_SRC
+
+* 進階函數
+
+** 函數指標
+這東西是拿來跟沒有閉包的語言對接用，例如 C 。一般情況下 ~Fn~ 、 ~FnMut~ 與 ~FnOnce~ 就可以達成這個效果。
+
+#+BEGIN_SRC rust
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+    f(arg) + f(arg)
+}
+
+fn main() {
+    let answer = do_twice(add_one, 5);
+
+    println!("The answer is: {}", answer);
+}
+#+END_SRC
+
+** 列舉的特殊用法
+列舉中的元組結構其初始化形式長得很像函數參數，而 Rust 中也能把該列舉項目當作是函數來初始化：
+
+#+BEGIN_SRC rust
+enum Status {
+    Value(u32),
+    Stop,
+}
+
+let list_of_statuses: Vec<Status> = (0u32..20).map(Status::Value).collect();
+#+END_SRC
+
+** 回傳閉包
+函數指標是不能當作回傳型態的，但是閉包可以做成特徵物件回傳。
+
+#+BEGIN_SRC rust
+fn returns_closure() -> Box<dyn Fn(i32) -> i32> {
+    Box::new(|x| x + 1)
+}
+#+END_SRC
+
+* 回到[[file:README.md][目錄]]
