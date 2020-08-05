@@ -1,0 +1,189 @@
+#+TITLE: 物件導向
+
+* SOLID 原則
+- Single-responsibility：物件應只具單一功能。
+- Open-closed：應該對擴充開放，但對修改封閉。
+- Liskov substitution：物件可被其子類所替換，而不改變正確性。
+- Interface segregation：多個特定介面優於一個泛用介面。
+- Dependency inversion：依賴於抽象而不是實例。
+
+* 常用組合
+Rust 中常以結構與列舉來提供「物件」，這種組合可以達成 GoF 所定義的物件所需功能。
+
+* 封裝
+Rust 可使用 ~pub~ 來提供對外 API 。如下的 ~add()~ 、 ~remove()~ 與 ~average()~ 是外面唯三能存取資料的方法。這能保證外部不會意外修改到內部的值。
+
+#+BEGIN_SRC rust
+pub struct AveragedCollection {
+    list: Vec<i32>,
+    average: f64,
+}
+
+impl AveragedCollection {
+    pub fn add(&mut self, value: i32) {
+        self.list.push(value);
+        self.update_average();
+    }
+
+    pub fn remove(&mut self) -> Option<i32> {
+        let result = self.list.pop();
+        match result {
+            Some(value) => {
+                self.update_average();
+                Some(value)
+            }
+            None => None,
+        }
+    }
+
+    pub fn average(&self) -> f64 {
+        self.average
+    }
+
+    fn update_average(&mut self) {
+        let total: i32 = self.list.iter().sum();
+        self.average = total as f64 / self.list.len() as f64;
+    }
+}
+#+END_SRC
+
+* 繼承
+Rust 沒有繼承。有繼承功能的新語言也逐漸減少，因為這常造成一些問題。會使用繼承的主因是程式碼的重工，而在 Rust 中可以用特徵來解決。
+
+* 多型
+Rust 使用特徵與泛型來達成多型。
+
+* 特徵物件
+結構中以 ~Box<dyn Foo>~ 來代表一個特徵物件，所有具有 ~Foo~ 特徵的物件都可以被放入。以下這段程式碼中， ~Screen~ 存了一個有 ~Draw~ 特徵的物件 vector ，並使用了 ~draw()~ 這個方法。
+
+#+BEGIN_SRC rust
+pub trait Draw {
+    fn draw(&self);
+}
+
+pub struct Screen {
+    pub components: Vec<Box<dyn Draw>>,
+}
+
+impl Screen {
+    pub fn run(&self) {
+        for component in self.components.iter() {
+            component.draw();
+        }
+    }
+}
+#+END_SRC
+
+** 物件安全與限制
+一個特徵要符合物件安全，必須達成兩個條件：
+
+- 回傳型態不能是 ~Self~
+- 沒有泛型參數
+
+舉例來說， ~Clone~ 這個特徵就不是物件安全的，因為它會回傳 ~Self~ 。所有的特徵物件都必須不能用到非物件安全的特徵。
+
+** 多重特徵
+目前仍然無法直接使用 ~+~ 達成，有些替代方案。[[https://github.com/rust-lang/rfcs/issues/2035][這裡]]有相關討論。
+
+* 物件導向設計模式
+有一種設計模式是狀態模式。在 Rust 中有兩種解法，一種是在結構中使用特徵物件表示狀態，另一種是使用不同型態與方法的回傳值達成。
+
+** 特徵物件法
+優點是容易擴充，也較易懂。缺點是無法在編譯時就阻止無效函數的使用，只能無效化。
+
+#+BEGIN_SRC rust
+struct Foo {
+    state: Option<Box<dyn State>>,
+    content: String,
+}
+
+impl Foo {
+    pub fn new() -> Foo {
+        Foo {
+            state: Some(Bow::new(Initial {})),
+            content: String::new(),
+        }
+    }
+}
+
+trait State {
+    fn to_second(self: Box<Self>) -> Box<dyn State>;
+    fn to_final(self: Box<Self>) -> Box<dyn State>;
+}
+
+struct Initial {}
+impl State for Initial {
+    fn to_second(self: Box<Self>) -> Box<dyn State> {
+        Box::new(Second {})
+    }
+
+    fn to_final(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+}
+
+struct Second {}
+impl State for Second {
+    fn to_second(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    fn to_final(self: Box<Self>) -> Box<dyn State> {
+        Box::new(Final {})
+    }
+}
+
+struct Final {}
+impl State for Final {
+    fn to_second(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    fn to_final(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+}
+#+END_SRC
+
+** 轉型法
+優點是不會有無效方法，缺點是較難擴充，也會需要用到遮蔽。
+
+#+BEGIN_SRC rust
+pub struct Foo {
+    content: String,
+}
+
+pub struct InitialFoo {
+    content: String,
+}
+
+pub struct SecondFoo {
+    content: String,
+}
+
+impl Foo {
+    pub fn new() -> InitialFoo {
+        InitialFoo {
+            content: String::new();
+        }
+    }
+}
+
+impl InitialFoo {
+    pub fn to_second(self) -> SecondFoo {
+        SecondFoo {
+            content: self.content,
+        }
+    }
+}
+
+impl SecondFoo {
+    pub fn to_last(self) -> Foo {
+        Foo {
+            content: self.content,
+        }
+    }
+}
+#+END_SRC
+
+* 回到[[file:README.md][目錄]]

@@ -59,6 +59,7 @@
 | design pattern         | 設計模式     |
 | drop                   | 丟棄         |
 | duplication            | 重工         |
+| encapsulation          | 封裝         |
 | enumeration            | 列舉         |
 | expression             | 量敘         |
 | field                  | 欄位         |
@@ -71,6 +72,7 @@
 | hash                   | 雜湊         |
 | immutable              | 不變的       |
 | index                  | 索引         |
+| inheritance            | 繼承         |
 | instance               | 實例         |
 | interior mutability    | 內變性       |
 | irrefutability         | 不可駁性     |
@@ -106,6 +108,7 @@
 | path                   | 路徑         |
 | pattern                | 模式         |
 | placeholder            | 占位符       |
+| polymorphism           | 多型         |
 | primitive              | 原生         |
 | privacy boundary       | 隱私邊界     |
 | private                | 私用         |
@@ -123,6 +126,7 @@
 | slice                  | 切片         |
 | smart pointer          | 智慧型指標   |
 | statement              | 敘述         |
+| state pattern          | 狀態模式     |
 | string                 | 字串         |
 | struct                 | 結構         |
 | supertrait             | 上級特徵     |
