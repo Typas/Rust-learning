@@ -41,5 +41,12 @@ macro_rules! vec {
 use proc_macro;
 
 #[some_attribute]
-pub fn some_name(input: TokenStream) -> TokenStream {}
+pub fn some_name(input: TokenStream) -> TokenStream {
+}
 #+END_SRC
+
+** 自訂衍生巨集
+
+** 類屬性巨集
+
+** 類函數巨集

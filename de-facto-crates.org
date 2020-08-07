@@ -2,9 +2,46 @@
 
 因為 Rust 傾向維持很小的標準函數庫，所以有很多事實上的標準函數庫會散落在 crates.io 中。如果有遺漏的，請開 issue 提醒我加入。
 
-| 名稱與連結  | 作者                      | 類型                                         | 備註       |
-|-------------+---------------------------+----------------------------------------------+------------|
-| [[https://crates.io/crates/lazy_static][lazy_static]] | Marvin Löbel              | no-std, rust-patterns, memory-management     |            |
-| [[https://crates.io/crates/num][num]]         | Rust Devs                 | no-std, algorithms, science, data structures |            |
-| [[https://crates.io/crates/num-derive][num-derive]]  | Rust Devs                 | science                                      | proc-macro |
-| [[https://crates.io/crates/rayon][rayon]]       | Josh Stone, Niko Matsakis | concurrency                                  |            |
+| 名稱與連結      | 作者                             | 類型                                           | 備註       |
+|-----------------+----------------------------------+------------------------------------------------+------------|
+| [[https://crates.io/crates/arrayvec][arrayvec]]        | bluss                            | no-std, data structure                         |            |
+| [[https://crates.io/crates/autocfg][autocfg]]         | Josh Stone                       | build util                                     |            |
+| [[https://crates.io/crates/base64][base64]]          | Alice Maz, Marshall Pierce       | no-std, encoding                               |            |
+| [[https://crates.io/crates/bitflags][bitflags]]        | Rust Devs                        | no-std                                         |            |
+| [[https://crates.io/crates/bytes][bytes]]           | Carl Lerche, Sean McArthur       | network, data structure                        |            |
+| [[https://crates.io/crates/cc][cc]]              | Alex Crichton                    | build util                                     |            |
+| [[https://crates.io/crates/crossbeam-deque][crossbeam-deque]] | Crossbeam Devs                   | algorithm, data structure, concurrency         |            |
+| [[https://crates.io/crates/crossbeam-utils][crossbeam-utils]] | Crossbeam Devs                   | no-std, algorithm, data structure, concurrency |            |
+| [[https://crates.io/crates/either][either]]          | bluss                            | no-std, data structure                         |            |
+| [[https://crates.io/crates/env_logger][env_logger]]      | Rust Devs                        | debugging                                      |            |
+| [[https://crates.io/crates/futures][futures]]         | Alex Crichton                    | async                                          |            |
+| [[https://crates.io/crates/generic-array][generic-array]]   | Aaron Trent, Bartłomiej Kamiński | no-std, data structure                         |            |
+| [[https://crates.io/crates/hyper][hyper]]           | Sean McArthur                    | network, http server, http client              |            |
+| [[https://crates.io/crates/indexmap][indexmap]]        | bluss, Josh Stone                | no-std, data structure                         |            |
+| [[https://crates.io/crates/iovec][iovec]]           | Carl Lerche                      | network, api binding                           |            |
+| [[https://crates.io/crates/itertools][itertools]]       | bluss                            | no-std, rust pattern                           |            |
+| [[https://crates.io/crates/lazy_static][lazy_static]]     | Marvin Löbel                     | no-std, rust pattern, memory-management        |            |
+| [[https://crates.io/crates/libc][libc]]            | Rust Devs                        | no-std, operating system, FFI                  |            |
+| [[https://crates.io/crates/lock_api][lock_api]]        | Amanieu d'Antras                 | no-std, concurrency                            |            |
+| [[https://crates.io/crates/log][log]]             | Rust Devs                        | debugging                                      |            |
+| [[https://crates.io/crates/memoffset][memoffset]]       | Gilad Naaman                     | no-std                                         |            |
+| [[https://crates.io/crates/mio][mio]]             | Carl Lerche                      | async                                          |            |
+| [[https://crates.io/crates/num][num]]             | Rust Devs                        | no-std, algorithm, science, data structure     |            |
+| [[https://crates.io/crates/num-derive][num-derive]]      | Rust Devs                        | science                                        | proc-macro |
+| [[https://crates.io/crates/proc-macro2][proc-macro2]]     | Alex Crichton, David Tolnay      | proc-macro helper                              |            |
+| [[https://crates.io/crates/quote][quote]]           | David Tolnay                     | proc-macro helper                              |            |
+| [[https://crates.io/crates/rand][rand]]            | Rust Devs                        | no-std, algorithm                              |            |
+| [[https://crates.io/crates/rand_core][rand_core]]       | Rust Devs                        | no-std, algorithm                              |            |
+| [[https://crates.io/crates/rayon][rayon]]           | Josh Stone, Niko Matsakis        | concurrency                                    |            |
+| [[https://crates.io/crates/regex][regex]]           | Rust Devs                        | text processing                                |            |
+| [[https://crates.io/crates/scopeguard][scopeguard]]      | bluss                            | no-std, rust pattern                           |            |
+| [[https://crates.io/crates/semver][semver]]          | Steve Klabnik, Rust Devs         |                                                |            |
+| [[https://crates.io/crates/serde][serde]]           | David Tolnay, Erick Tryzelaar    | no-std, encoding                               |            |
+| [[https://crates.io/crates/slab][slab]]            | Carl Lerche                      | data structure, memory management              |            |
+| [[https://crates.io/crates/smallvec][smallvec]]        | Simon Sapin                      | no-std, data structure                         |            |
+| [[https://crates.io/crates/syn][syn]]             | David Tolnay                     | proc-macro helper                              |            |
+| [[https://crates.io/crates/tokio][tokio]]           | Tokio Contributors               | network, async                                 |            |
+| [[https://crates.io/crates/unicase][unicase]]         | Sean McArthur                    | no-std, text processing, i18n                  |            |
+| [[https://crates.io/crates/unicode-xid][unicode-xid]]     | erick.tryzelaar, kwantam         | no-std, unicode                                |            |
+| [[https://crates.io/crates/url][url]]             | The rust-url devs                | web, parser, encoding                          |            |
+| [[https://crates.io/crates/winapi][winapi]]          | Peter Atashian                   | no-std, Windows, FFI                           |            |
