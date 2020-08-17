@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+"single-thread",
+"multi-thread",
+"server-run",
+]
