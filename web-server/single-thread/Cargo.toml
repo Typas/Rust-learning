@@ -1,5 +1,5 @@
 [package]
-name = "single"
+name = "single-thread"
 version = "0.1.0"
 authors = ["Typas Liao <typascake@gmail.com>"]
 edition = "2018"
