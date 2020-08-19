@@ -1,10 +1,10 @@
+use crate::pool::ThreadPool;
 use std::fs;
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
-use crate::pool::ThreadPool;
 
 mod pool;
 
