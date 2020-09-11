@@ -76,7 +76,7 @@ pub const fn iter(&self) -> Iter<'_, T> {
 }
 #+END_SRC
 
-回傳的型態 [[*Iter][Iter]] 是模組內定義的一個結構。
+回傳的型態 [[#struct-iter][Iter]] 是模組內定義的一個結構。
 
 
 
@@ -339,8 +339,11 @@ unsafe impl<A> TrustedLen for Item<A> {}
 #+END_SRC
 
 ** Iter
+:PROPERTIES:
+:CUSTOM_ID: struct-iter
+:END:
 
-[[*iter][iter()]] [[*iter][iter()]] 所回傳的結構。
+iter() 所回傳的結構。
 
 *** Definition
 #+BEGIN_SRC rust
