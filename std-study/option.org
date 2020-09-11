@@ -52,7 +52,7 @@ pub const fn is_none(&self) -> bool {
 }
 #+END_SRC
 
-上面的 =is_some= 的反轉，只是我不太能理解為什麼是用 =Some= 而不是 =None= 去對應。
+上面的 =is_some= [[*is_some][is_some]] 的反轉，只是我不太能理解為什麼是用 =Some= 而不是 =None= 去對應。
 
 *** unwrap
 #+BEGIN_SRC rust
@@ -340,7 +340,7 @@ unsafe impl<A> TrustedLen for Item<A> {}
 
 ** Iter
 
-[[*iter][iter()]] 所回傳的結構。
+[[*iter][iter()]] [[*iter][iter()]] 所回傳的結構。
 
 *** Definition
 #+BEGIN_SRC rust
