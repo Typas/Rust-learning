@@ -1,0 +1,14 @@
+#+TITLE: Result
+#+AUTHOR: Typas Liao
+
+[[https://github.com/rust-lang/rust/blob/master/library/core/src/result.rs][Source Code Location]]
+
+* Associated Functions
+
+* Const Methods
+
+* Safe Methods
+
+* Unsafe Methods
+
+* Trait Implementations

@@ -1,0 +1,14 @@
+#+TITLE: LinkedList
+#+AUTHOR: Typas Liao
+
+[[https://github.com/rust-lang/rust/blob/master/library/alloc/src/collections/linked_list.rs][Source Code Location]]
+
+* Associated Functions
+
+* Const Methods
+
+* Safe Methods
+
+* Unsafe Methods
+
+* Trait Implementations

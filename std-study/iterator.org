@@ -1,0 +1,8 @@
+#+TITLE: Iterator
+#+AUTHOR: Typas Liao
+
+[[https://github.com/rust-lang/rust/blob/master/library/core/src/iter/traits/iterator.rs][Source Code Location]]
+
+* Required Methods
+
+* Provided Methods

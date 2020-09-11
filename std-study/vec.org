@@ -1,0 +1,14 @@
+#+TITLE: Vec
+#+AUTHOR: Typas Liao
+
+[[https://github.com/rust-lang/rust/blob/master/library/alloc/src/vec.rs][Source Code Location]]
+
+* Associated Functions
+
+* Const Methods
+
+* Safe Methods
+
+* Unsafe Methods
+
+* Trait Implementations
