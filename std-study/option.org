@@ -1,9 +1,11 @@
 #+TITLE: Option
 #+AUTHOR: Typas Liao
+#+DATE: <2020-09-12 六>
 
 [[https://github.com/rust-lang/rust/blob/master/library/core/src/option.rs][Source Code Location]]
 
-* Use
+* <<use>> Use
+
 #+BEGIN_SRC rust
 use core::iter::{FromIterator, FusedIterator, TrustedLen};
 use core::pin::Pin;
@@ -13,9 +15,8 @@ use core::{
 };
 #+END_SRC
 
-下方到時看看有什麼有使用到的。
-
 * Definition
+
 #+BEGIN_SRC rust
 #[derive(Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
 pub enum Option<T> {
@@ -34,7 +35,8 @@ pub enum Option<T> {
 
 ** Stable, but unstable const, issue 67441
 
-*** is_some
+*** <<method-is_some>> =is_some=
+
 #+BEGIN_SRC rust
 #[inline]
 pub const fn is_some(&self) -> bool {
@@ -44,7 +46,8 @@ pub const fn is_some(&self) -> bool {
 
 用到了 [[https://doc.rust-lang.org/std/macro.matches.html][matches]] 巨集，在對應到任何有值的東西時回傳 =true= ，反之則回傳 =false= 。
 
-*** is_none
+*** <<method-is_none>> =is_none=
+
 #+BEGIN_SRC rust
 #[inline]
 pub const fn is_none(&self) -> bool {
@@ -54,7 +57,8 @@ pub const fn is_none(&self) -> bool {
 
 上面的 =is_some= 的反轉，只是我不太能理解為什麼是用 =Some= 而不是 =None= 去對應。
 
-*** unwrap
+*** <<method-unwrap>> =unwrap=
+
 #+BEGIN_SRC rust
 #[inline]
 #[track_caller]
@@ -68,8 +72,8 @@ pub const fn unwrap(self) -> T {
 
 就是一個在 =None= 會噴死你的函數，會拿走所有權。
 
-*** iter
-<<method-iter>>
+*** <<method-iter>> =iter=
+
 #+BEGIN_SRC rust
 #[inline]
 pub const fn iter(&self) -> Iter<'_, T> {
@@ -85,7 +89,8 @@ pub const fn iter(&self) -> Iter<'_, T> {
 
 ** Stable
 
-*** as_ref
+*** <<method-as_ref>> =as_ref=
+
 #+BEGIN_SRC rust
 #[inline]
 pub const fn as_ref(&self) -> Option<&T> {
@@ -98,7 +103,8 @@ pub const fn as_ref(&self) -> Option<&T> {
 
 用到了 =match= 裡的 =ref= 關鍵字，配對的值本身型態是 =U= 時，加上 =ref= 則在分支內的變數 =x= 會是 =&U= 型態。
 
-*** as_mut
+*** <<method-as_mut>> =as_mut=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn as_mut(&mut self) -> Option<&mut T> {
@@ -111,7 +117,8 @@ pub fn as_mut(&mut self) -> Option<&mut T> {
 
 同上，多用了一個 =mut= 關鍵字，型態改變成 =&mut U= 。
 
-*** as_pin_ref
+*** <<method-as_pin_ref>> =as_pin_ref=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn as_pin_ref(self: Pin<&Self>) -> Option<Pin<&T>> {
@@ -121,9 +128,11 @@ pub fn as_pin_ref(self: Pin<&Self>) -> Option<Pin<&T>> {
 }
 #+END_SRC
 
+[[use][use]]
 TODO: usage of =core::pin::Pin=
 
-*** as_pin_mut
+*** <<method-as_pin_mut>> =as_pin_mut=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn as_pin_mut(self: Pin<&mut Self>) -> Option<Pin<&mut T>> {
@@ -133,9 +142,11 @@ pub fn as_pin_mut(self: Pin<&mut Self>) -> Option<Pin<&mut T>> {
 }
 #+END_SRC
 
+[[use][use]]
 TODO: usage of =core::pin::Pin=
 
-*** expect
+*** <<method-expect>> =expect=
+
 #+BEGIN_SRC rust
 #[inline]
 #[track_caller]
@@ -149,7 +160,7 @@ pub fn expect(self, msg: &str) -> T {
 
 裡面的 =expect_failed()= 是私有方法，在對應到 =None= 時會觸發。會拿走所有權。
 
-*** expect_failed
+*** =expect_failed=
 #+BEGIN_SRC rust
 #[inline(never)]
 #[cold]
@@ -161,7 +172,8 @@ fn expect_failed(msg: &str) -> ! {
 
 屬性巨集 =cold= 是對編譯器提示這個函數不太可能被呼叫到。問題：為何會需要獨立成一個方法？
 
-*** unwrap_or
+*** <<method-unwrap_or>> =unwrap_or=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn unwrap_or(self, default: T) -> T {
@@ -174,7 +186,8 @@ pub fn unwrap_or(self, default: T) -> T {
 
 請注意這裡會拿走自身與 =default= 的所有權。
 
-*** unwrap_or_else
+*** <<method-unwrap_or_else>> =unwrap_or_else=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn unwrap_or_else<F: FnOnce() -> T>(self, f: F) -> T {
@@ -185,9 +198,10 @@ pub fn unwrap_or_else<F: FnOnce() -> T>(self, f: F) -> T {
 }
 #+END_SRC
 
-裡面的函數 f 會拿走所有內部變數的所有權，自身的所有權也會被此方法拿走。
+裡面的函數 =f= 會拿走所有內部變數的所有權，自身的所有權也會被此方法拿走。
 
-*** map
+*** <<method-map>> =map=
+
 #+BEGIN_SRC rust
 #[inline]
 #[stable(feature = "rust1", since = "1.0.0")]
@@ -199,9 +213,10 @@ pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U> {
 }
 #+END_SRC
 
-利用 f 將自身映射到 f(x) 上，此方法會拿走自身的所有權。
+利用 =f= 將自身映射到 =f(x)= 上，此方法會拿走自身的所有權。
 
-*** map_or
+*** <<method-map_or>> =map_or=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn map_or<U, F: FnOnce(T) -> U>(self, default: U, f: F) -> U {
@@ -212,9 +227,10 @@ pub fn map_or<U, F: FnOnce(T) -> U>(self, default: U, f: F) -> U {
 }
 #+END_SRC
 
-與 =unwrap_or= 相似，但 =default= 的型態為映射後的 =U= 而非原來的 =T= 。
+與 [[method-unwrap_or][unwrap_or]] 相似，但 =default= 的型態為映射後的 =U= 而非原來的 =T= 。
 
-*** map_or_else
+*** <<method-map_or_else>> =map_or_else=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn map_or_else<U, D: FnOnce() -> U, F: FnOnce(T) -> U>(self, default: D, f: F) -> U {
@@ -225,9 +241,10 @@ pub fn map_or_else<U, D: FnOnce() -> U, F: FnOnce(T) -> U>(self, default: D, f: 
 }
 #+END_SRC
 
-與 =unwrap_or_else= 相似，但型態為映射後的 =U= 。
+與 [[method-unwrap_or_else][unwrap_or_else]] 相似，但型態為映射後的 =U= 。
 
-*** ok_or
+*** <<method-ok_or>> =ok_or=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn ok_or<E>(self, err: E) -> Result<T, E> {
@@ -240,7 +257,8 @@ pub fn ok_or<E>(self, err: E) -> Result<T, E> {
 
 把 =Option<T>= 型態轉成 =Result<T, E>= 型態的神方法，需要自行加上錯誤型態，兩個參數都會被拿走所有權。
 
-*** ok_or_else
+*** <<method-ok_or_else>> =ok_or_else=
+
 #+BEGIN_SRC rust
 #[inline]
 pub fn ok_or_else<E, F: FnOnce() -> E>(self, err: F) -> Result<T, E> {
@@ -251,13 +269,297 @@ pub fn ok_or_else<E, F: FnOnce() -> E>(self, err: F) -> Result<T, E> {
 }
 #+END_SRC
 
-=ok_or= 的錯誤參數改成使用一個回傳錯誤的函數。會拿走自身的所有權。
+從 =ok_or= 的錯誤參數改成使用一個回傳錯誤的函數。會拿走自身的所有權。
 
-*** iter_mut
+*** <<method-iter_mut>> =iter_mut=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn iter_mut(&mut self) -> IterMut<'_, T> {
+    IterMut { inner: Item { opt: self.as_mut() } }
+}
+#+END_SRC
+
+利用新結構 [[struct-itermut][IterMut]] 來達成特徵實作的隔離。
+
+*** <<method-and>> =and=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn and<U>(self, optb: Option<U>) -> Option<U> {
+    match self {
+        Some(_) => optb,
+        None => None,
+    }
+}
+#+END_SRC
+
+與不同型態做邏輯的「且」運算，注意是回傳 =optb= 的結果，兩方的所有權都會被轉移。
+
+*** <<method-and_then>> =and_then=
+
+#+BEGIN_SRC rust
+#[inline]
+#[stable(feature = "rust1", since = "1.0.0")]
+pub fn and_then<U, F: FnOnce(T) -> Option<U>>(self, f: F) -> Option<U> {
+    match self {
+        Some(x) => f(x),
+        None => None,
+    }
+}
+#+END_SRC
+
+上方邏輯「且」運算中，將參數 =optb= 改為函數 =f= 的方法。非常類似於 [[method-map][map()]] ，但是在函數的定義上不同。 =map()= 使用的函數為回傳型態 =U= 的一次性函數，而 =and_then()= 則是使用回傳型態為 =Option<U>= 的一次性函數。
+
+*** <<method-filter>> =filter=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn filter<P: FnOnce(&T) -> bool>(self, predicate: P) -> Self {
+    if let Some(x) = self {
+        if predicate(&x) {
+            return Some(x);
+        }
+    }
+    None
+}
+#+END_SRC
+
+=P= 為接受一個參數為 =&T= 的一次性函數，為何不用一般的 =Fn= ？這段程式碼是用 =if let= 而不是用 =match= ，不確定這樣寫的原因為何，或許與 =match= 對 =predicate(&x)= 的解析有關係。
+
+我不確定這樣會不會爆炸的寫法：
+
+#+BEGIN_SRC rust
+match self {
+    Some(x) => match predicate(&x) {
+        true => Some(x),
+        false => None,
+    },
+    None,
+}
+#+END_SRC
+
+*** <<method-or>> =or=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn or(self, optb: Option<T>) -> Option<T> {
+    match self {
+        Some(_) => self,
+        None => optb,
+    }
+}
+#+END_SRC
+
+與同型態做邏輯的「或」運算，兩個參數都會被拿走所有權。在自身有值時會回傳自身，反之回傳 =optb= 。
+
+*** <<method-or_else>> =or_else=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn or_else<F: FnOnce() -> Option<T>>(self, f: F) -> Option<T> {
+    match self {
+        Some(_) => self,
+        None => f(),
+    }
+}
+#+END_SRC
+
+上方邏輯「或」運算中，把 =optb= 以 =f= 這個函數取代掉的方法。注意「且」能回傳不同型態，而「或」只能回傳同一型態。
+
+*** <<method-xor>> =xor=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn xor(self, optb: Option<T>) -> Option<T> {
+    match (self, optb) {
+        (Some(a), None) => Some(a),
+        (None, Some(b)) => Some(b),
+        _ => None,
+    }
+}
+#+END_SRC
+
+與同型態做邏輯的「互斥或」運算，兩個參數都會被拿走所有權。兩者皆有或皆無值時回傳 =None= ，其一有值時回傳有值的一邊。
+
+*** <<method-get_or_insert>> =get_or_insert=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn get_or_insert(&mut self, v: T) -> &mut T {
+    self.get_or_insert_with(|| v)
+}
+#+END_SRC
+
+以一個簡單的閉包直接把 =v= 轉移進去 [[method-get_or_insert_with][get_or_insert_with()]] ，避免了重複的程式碼。
+
+*** <<method-get_or_insert_with>> =get_or_insert_with=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn get_or_insert_with<F: FnOnce() -> T>(&mut self, f: F) -> &mut T {
+    if let None = *self {
+        *self = Some(f());
+    }
+
+    match *self {
+        Some(ref mut v) => v,
+        // SAFETY: a `None` variant for `self` would have been replaced by a `Some`
+        // variant in the code above.
+        None => unsafe { hint::unreachable_unchecked() },
+    }
+}
+#+END_SRC
+
+第一段程式碼將所有的 =None= 轉換成 =Some(f())= 。第二段程式碼中利用 =match= 的 =ref mut= 把 =T= 轉成 =&mut T= 後回傳，其中 =None= 分支由第一段保證不會被執行到，因此用一段 SAFETY 註解標示為何使用到 =unsafe= 。
+此處有用到 [[use][core::hint]] 。
+
+*** <<method-take>> =take=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn take(&mut self) -> Option<T> {
+    mem::take(self)
+}
+#+END_SRC
+
+此處用到 [[use][core::mem]] 的 [[https://doc.rust-lang.org/core/mem/fn.take.html][take()]] 。這個函數需要 =Option= 自身的 [[trait-default][Default]] 特徵實作，會將內部型態為 =T= 的值以預設值取代，並回傳被取代的值。若這個型態沒有標註為 =Copy= 特徵，則回傳會拿走所有權。
+
+*** <<method-replace>> =replace=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn replace(&mut self, value: T) -> Option<T> {
+    mem::replace(self, Some(value))
+}
+#+END_SRC
+
+此處用到 [[use][core::mem]] 的 [[https://doc.rust-lang.org/core/mem/fn.replace.html][replace()]] 。這個函數會將內部的值以 =value= 取代，並回傳原本的值。
+
+*** <<method-zip>> =zip=
+
+#+BEGIN_SRC rust
+pub fn zip<U>(self, other: Option<U>) -> Option<(T, U)> {
+    match (self, other) {
+        (Some(a), Some(b)) => Some((a, b)),
+        _ => None,
+    }
+}
+#+END_SRC
+
+這個方法會在兩個值都是 =Some= 的時候綁成一個元組，其餘都會回傳 =None= 。概念上是「且」運算，注意兩個所有權都會被吃掉。
+
+*** <<method-copied>> =copied=
+
+需要型態 =T= 有 =Copy= 特徵。
+
+#+BEGIN_SRC rust
+impl<T: Copy> Option<&T> {
+    pub fn copied(self) -> Option<T> {
+        self.map(|&t| t)
+    }
+}
+#+END_SRC
+
+#+BEGIN_SRC rust
+impl<T: Copy> Option<&mut T> {
+    pub fn copied(self) -> Option<T> {
+        self.map(|&mut t| t)
+    }
+}
+#+END_SRC
+
+兩個實作十分相近，都是利用閉包特性進行複製。
+
+*** <<method-cloned>> =cloned=
+
+需要型態 =T= 有 =Clone= 特徵。
+
+#+BEGIN_SRC rust
+impl<T: Clone> Option<&T> {
+    pub fn cloned(self) -> Option<T> {
+        self.map(|t| t.clone())
+    }
+}
+#+END_SRC
+
+#+BEGIN_SRC rust
+impl<T: Clone> Option<&mut T> {
+    pub fn cloned(self) -> Option<T> {
+        self.map(|t| t.clone())
+    }
+}
+#+END_SRC
+
+由於有強解參照，不用像上面的 [[method-copied][copied()]] 一樣特別去寫閉包參數。
+
+*** <<method-unwrap_or_default>> =unwrap_or_default=
+
+需要型態 =T= 有 =Default= 特徵。
+
+#+BEGIN_SRC rust
+impl<T: Default> Option<T> {
+    #[inline]
+    pub fn unwrap_or_default(self) -> T {
+        match self {
+            Some(x) => x,
+            None => Default::default(),
+        }
+    }
+}
+#+END_SRC
+
+非常簡單的一個 =match= 解決。
+
+*** <<method-as_deref>> =as_deref=
+
+需要型態 =T= 有 [[https://doc.rust-lang.org/core/ops/trait.Deref.html][Deref]] 特徵。
+
+#+BEGIN_SRC rust
+impl<T: Deref> Option<T> {
+    pub fn as_deref(&self) -> Option<&T::Target> {
+        self.as_ref().map(|t| t.deref())
+    }
+}
+#+END_SRC
+
+用 =as_ref()= 取得 =&T= 後，再用 =map()= 裡的 =deref()= 與強制解參，得到 =T= 型態的解參照型態 =&T::Target= 。
+
+*** <<method-as_deref_mut>> =as_deref_mut=
+
+需要型態 =T= 有 [[https://doc.rust-lang.org/core/ops/trait.DerefMut.html][DerefMut]] 特徵。
+
+#+BEGIN_SRC rust
+impl<T: DerefMut> Option<T> {
+    pub fn as_deref_mut(&mut self) -> Option<&mut T::Target> {
+        self.as_mut().map(|t| t.deref_mut())
+    }
+}
+#+END_SRC
+
+與上面接近，回傳型態不同。
+
+*** <<method-transpose>> =transpose=
+
+#+BEGIN_SRC rust
+impl<T, E> Option<Result<T, E>> {
+    #[inline]
+    pub fn transpose(self) -> Result<Option<T>, E> {
+        match self {
+            Some(Ok(x)) => Ok(Some(x)),
+            Some(Err(e)) => Err(e),
+            None => Ok(None),
+        }
+    }
+}
+#+END_SRC
+
+將 =Option<Result<T, E>>= 轉成 =Result<Option<T>, E>= ，用 =match= 做簡單的對應就解決了。
 
 ** Unstable
 
-*** contains
+*** <<method-contains>> =contains=
+
 #+BEGIN_SRC rust
 #[inline]
 #[unstable(feature = "option_result_contains", issue = "62358")]
@@ -272,17 +574,252 @@ where
 }
 #+END_SRC
 
-從定義看出，這段程式碼在使用了特徵綁定後不需限於同型態，只需要單向的PartialEq特徵即可。
+從定義看出，這段程式碼在使用了特徵綁定後不需限於同型態，只需要單向的 =PartialEq= 特徵即可。
+
+*** <<method-zip_with>> =zip_with=
+
+#+BEGIN_SRC rust
+#[unstable(feature = "option_zip", issue = "70086")]
+pub fn zip_with<U, F, R>(self, other: Option<U>, f: F) -> Option<R>
+where
+    F: FnOnce(T, U) -> R,
+{
+    Some(f(self?, other?))
+}
+#+END_SRC
+
+其中的 =?= 保證當自身或 =other= 其一是 =None= 時會直接回傳 =None= ，只有兩個都是 =Some= 時才會利用 =f= 將型態 =T= 與 =U= 映射到 =R= 上。
+
+*** <<method-expect_none>> =expect_none=
+
+需要型態 =T= 有 [[https://doc.rust-lang.org/core/fmt/trait.Debug.html][fmt::Debug]] 特徵。
+
+#+BEGIN_SRC rust
+impl<T: fmt::Debug> Option<T> {
+    #[inline]
+    #[track_caller]
+    #[unstable(feature = "option_expect_none", reason = "newly added", issue = "62633")]
+    pub fn expect_none(self, msg: &str) {
+        if let Some(val) = self {
+            expect_none_failed(msg, &val);
+        }
+    }
+}
+#+END_SRC
+
+*** =expect_none_failed=
+
+#+BEGIN_SRC rust
+impl<T: fmt::Debug> Option<T> {
+    #[inline(never)]
+    #[cold]
+    #[track_caller]
+    fn expect_none_failed(msg: &str, value: &dyn fmt::Debug) -> ! {
+        panic!("{}: {:?}", msg, value)
+    }
+}
+#+END_SRC
+
+*** <<method-unwrap_none>> =unwrap_none=
+
+需要型態 =T= 有 [[https://doc.rust-lang.org/core/fmt/trait.Debug.html][fmt::Debug]] 特徵。
+
+#+BEGIN_SRC rust
+impl<T: fmt::Debug> Option<T> {
+    #[inline]
+    #[track_caller]
+    #[unstable(feature = "option_unwrap_none", reason = "newly added", issue = "62633")]
+    pub fn unwrap_none(self) {
+        if let Some(val) = self {
+            expect_none_failed("called `Option::unwrap_none()` on a `Some` value", &val);
+        }
+    }
+}
+#+END_SRC
+
+*** <<method-flatten>> =flatten=
+
+需要為型態 =Option<Option<T>>= 。
+
+#+BEGIN_SRC rust
+impl<T> Option<Option<T>> {
+    #[inline]
+    pub fn flatten(self) -> Option<T> {
+        self.and_then(convert::identity)
+    }
+}
+#+END_SRC
+
+[[use][Use]] 用到了 [[https://doc.rust-lang.org/core/convert/fn.identity.html][core::convert::identity]] 這個函數，與 [[method-and_then][and_then()]] 這個方法，讓 =Some(opt)= 用 =convert::identity()= 轉成 =opt= ，而 =None= 則因為 =and_then= 轉成 =None= ，最後型態是 =Option<T>= 。
 
 * Unsafe Methods
 
+沒有這種東西。
+
 * Trait Implementations
+
+** <<trait-clone>> Clone
+
+#+BEGIN_SRC rust
+impl<T: Clone> Clone for Option<T> {
+    #[inline]
+    fn clone(&self) -> Self {
+        match self {
+            Some(x) => Some(x.clone()),
+            None => None,
+        }
+    }
+
+    #[inline]
+    fn clone_from(&mut self, source: &Self) {
+        match (self, source) {
+            (Some(to), Some(from)) => to.clone_from(from),
+            (to, from) => *to = from.clone(),
+        }
+    }
+}
+#+END_SRC
+
+=clone()= 很簡單，就是用內容的 =clone()= 再在外面包一層 =Some= 。當 =clone_from()= 的兩個都是 =Some= 時也很簡單； =(Some, None)= 時用了 =Option= 內的 =clone()= 所以保證會複製到 =None= ； =(None, Some)= 時自身的值被 =Some= 裡面的值更新，所以也保證會複製到 =Some= ； =(None, None)= 時則保證會複製到 =None= 。
+
+
+** <<trait-default>> Default
+
+#+BEGIN_SRC rust
+impl<T> Default for Option<T> {
+    #[inline]
+    fn default() -> Option<T> {
+        None
+    }
+}
+#+END_SRC
+
+預設值是 =None= 。所以不需要型態 =T= 有任何的 =Default= 實作。
+
+** <<trait-intoiterator>> IntoIterator
+
+#+BEGIN_SRC rust
+impl<T> IntoIterator for Option<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+
+    #[inline]
+    fn into_iter(self) -> IntoIter<T> {
+        IntoIter { inner: Item { opt: self } }
+    }
+}
+#+END_SRC
+
+建立一個 [[struct-intoiter][IntoIter]] 結構，會把所有權拿走。
+
+#+BEGIN_SRC rust
+impl<'a, T> IntoIterator for &'a Option<T> {
+    type Item = &'a T;
+    type IntoIter = Iter<'a, T>;
+
+    fn into_iter(self) -> Iter<'a, T> {
+        self.iter()
+    }
+}
+#+END_SRC
+
+這邊直接使用了 [[struct-iter][Iter]] 結構。
+
+#+BEGIN_SRC rust
+impl<'a, T> IntoIterator for &'a mut Option<T> {
+    type Item = &'a mut T;
+    type IntoIter = IterMut<'a, T>;
+
+    fn into_iter(self) -> IterMut<'a, T> {
+        self.iter_mut()
+    }
+}
+#+END_SRC
+
+這邊直接使用了 [[struct-itermut][IterMut]] 結構。
+
+** <<trait-from>> From
+
+#+BEGIN_SRC rust
+impl<T> From<T> for Option<T> {
+    fn from(val: T) -> Option<T> {
+        Some(val)
+    }
+}
+#+END_SRC
+
+這邊會直接把 =val= 的所有權吃掉，必定轉成 =Some= 。
+
+#+BEGIN_SRC rust
+impl<'a, T> From<&'a Option<T>> for Option<&'a T> {
+    fn from(o: &'a Option<T>) -> Option<&'a T> {
+        o.as_ref()
+    }
+}
+#+END_SRC
+
+這邊會複製的是參照，生命期為 =o= 的參照來源。使用了 [[method-as_ref][as_ref()]] 方法，所以可以將型態從 =&Option<T>= 轉為 =Option<&T>= 而且不複製到內容物本身。
+
+#+BEGIN_SRC rust
+impl<'a, T> From<&'a mut Option<T>> for Option<&'a mut T> {
+    fn from(o: &'a mut Option<T>) -> Option<&'a mut T> {
+        o.as_mut()
+    }
+}
+#+END_SRC
+
+這邊複製一個可變參照，生命期為 =o= 的參照來源。使用了 [[method-as_mut][as_mut()]] 方法，所以可以將型態從 =&mut Option<T>= 轉為 =Option<&mut T>= 而不複製內容易本身。
+
+** <<trait-fromiterator>> FromIterator
+
+#+BEGIN_SRC rust
+
+impl<A, V: FromIterator<A>> FromIterator<Option<A>> for Option<V> {
+    #[inline]
+    fn from_iter<I: IntoIterator<Item = Option<A>>>(iter: I) -> Option<V> {
+        // FIXME(#11084): This could be replaced with Iterator::scan when this
+        // performance bug is closed.
+
+        iter.into_iter().map(|x| x.ok_or(())).collect::<Result<_, _>>().ok()
+    }
+}
+#+END_SRC
+
+註解裡提到的 [[https://doc.rust-lang.org/core/iter/trait.Iterator.html#method.scan][Iterator::scan]] 是創出新的迭代器的方法。參數 =iter= 的型態 =I= 必須要有 =IntoIterator= 中 =Item = Option<A>= 的實作；最後的回傳型態 =V= 則必須要有 =FromIterator= 中型態 =A= 的實作。首先是把參數 =iter= 用 =into_iter()= 轉成 =IntoIterator= ，再用 =map()= 將每個型態為 =Option<A>= 的元素 =x= 用 =ok_or()= 轉成型態 =Result<A, ()>= ，此時外面型態是 =Map<Self, F>= ，然後用 =IntoIterator= 的方法 =collect()= 做成 =Result<V, ()>= ，最後再用 =Result= 的方法 =ok()= 轉回 =Option<V>= 。
+
+** <<trait-try>> ops::Try (Unstable)
+
+#+BEGIN_SRC rust
+#[unstable(feature = "try_trait", issue = "42327")]
+impl<T> ops::Try for Option<T> {
+    type Ok = T;
+    type Error = NoneError;
+
+    #[inline]
+    fn into_result(self) -> Result<T, NoneError> {
+        self.ok_or(NoneError)
+    }
+
+    #[inline]
+    fn from_ok(v: T) -> Self {
+        Some(v)
+    }
+
+    #[inline]
+    fn from_error(_: NoneError) -> Self {
+        None
+    }
+}
+#+END_SRC
+
+這個以後可能用來取代 [[method-ok_or][ok_or()]] 等等方法，以一個 =?= 就回傳 =Result= 型態。
 
 * Structs
 
-** Item
+** <<struct-item>> Item
 
 *** Definition
+
 #+BEGIN_SRC rust
 #[derive(Clone, Debug)]
 struct Item<A> {
@@ -290,11 +827,13 @@ struct Item<A> {
 }
 #+END_SRC
 
+[[struct-iter][Iter]] 內的欄位結構。
 
 
 *** Trait Implementations
 
 **** Iterator
+
 #+BEGIN_SRC rust
 impl<A> Iterator for Item<A> {
     type Item = A;
@@ -314,7 +853,10 @@ impl<A> Iterator for Item<A> {
 }
 #+END_SRC
 
+實作上使用 [[method-take][take()]] 這個方法達成。 其中的 =size_hint()= 因為非常簡單所以用 =match= 來加速。
+
 **** DoubleEndedIterator
+
 #+BEGIN_SRC rust
 impl<A> DoubleEndedIterator for Item<A> {
     #[inline]
@@ -324,27 +866,32 @@ impl<A> DoubleEndedIterator for Item<A> {
 }
 #+END_SRC
 
+因為在內有東西時從前面往後看與從後往前是一樣的，所以與上面的 =next()= 寫法一樣即可。
+
 **** ExactSizeIterator
+
 #+BEGIN_SRC rust
 impl<A> ExactSizeIterator for Item<A> {}
 #+END_SRC
 
 **** FusedIterator
+
 #+BEGIN_SRC rust
 impl<A> FusedIterator for Item<A> {}
 #+END_SRC
 
 **** TrustedLen
+
 #+BEGIN_SRC rust
 unsafe impl<A> TrustedLen for Item<A> {}
 #+END_SRC
 
-** Iter
-<<struct-iter>>
+** <<struct-iter>> Iter
 
 [[method-iter][iter()]] 所回傳的結構。
 
 *** Definition
+
 #+BEGIN_SRC rust
 #[derive(Debug)]
 pub struct Iter<'a, A: 'a> {
@@ -352,5 +899,205 @@ pub struct Iter<'a, A: 'a> {
 }
 #+END_SRC
 
+借用的生命期為 =a= ，而結構本身的生命期也為 =a= 。
 
 *** Trait Implementations
+
+**** Iterator
+
+#+BEGIN_SRC rust
+impl<'a, A> Iterator for Iter<'a, A> {
+    type Item = &'a A;
+
+    #[inline]
+    fn next(&mut self) -> Option<&'a A> {
+        self.inner.next()
+    }
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
+    }
+}
+#+END_SRC
+
+利用了另一個結構 [[struct-item][Item]] 簡化了麻煩的生命期標註，這邊只做呼叫內部的方法完成。
+
+**** DoubleEndedIterator
+
+#+BEGIN_SRC rust
+impl<'a, A> DoubleEndedIterator for Iter<'a, A> {
+    #[inline]
+    fn next_back(&mut self) -> Option<&'a A> {
+        self.inner.next_back()
+    }
+}
+#+END_SRC
+
+**** ExactSizeIterator
+
+#+BEGIN_SRC rust
+impl<A> ExactSizeIterator for Iter<'_, A> {}
+#+END_SRC
+
+**** FusedIterator
+
+#+BEGIN_SRC rust
+impl<A> FusedIterator for Iter<'_, A> {}
+#+END_SRC
+
+**** Clone
+
+#+BEGIN_SRC rust
+impl<A> Clone for Iter<'_, A> {
+    #[inline]
+    fn clone(&self) -> Self {
+        Iter { inner: self.inner.clone() }
+    }
+}
+#+END_SRC
+
+不使用 =derive= 巨集，而是明確呼叫 [[struct-item][Item]] 的 =clone()= 。
+
+**** TrustedLen (Unstable)
+
+#+BEGIN_SRC rust
+#[unstable(feature = "trusted_len", issue = "37572")]
+unsafe impl<A> TrustedLen for Iter<'_, A> {}
+#+END_SRC
+
+** <<struct-itermut>> IterMut
+
+[[method-iter_mut][iter_mut()]] 所回傳的結構。
+
+*** Definition
+
+#+BEGIN_SRC rust
+#[derive(Debug)]
+pub struct IterMut<'a, A: 'a> {
+    inner: Item<&'a mut A>,
+}
+#+END_SRC
+
+與上方的[[struct-iter][Iter]] 不同的是多了一個 =mut= 借用。
+
+*** Trait Implementations
+
+**** Iterator
+
+#+BEGIN_SRC rust
+impl<'a, A> Iterator for IterMut<'a, A> {
+    type Item = &'a mut A;
+
+    #[inline]
+    fn next(&mut self) -> Option<&'a mut A> {
+        self.inner.next()
+    }
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
+    }
+}
+#+END_SRC
+
+所有的實作都交由 [[struct-item][Item]] 完成， [[struct-iter][Iter]] 與 [[struct-itermut][IterMut]] 只負責做出泛型的不同借用，非常高的抽象程度。
+
+**** DoubleEndedIterator
+
+#+BEGIN_SRC rust
+impl<'a, A> DoubleEndedIterator for IterMut<'a, A> {
+    #[inline]
+    fn next_back(&mut self) -> Option<&'a mut A> {
+        self.inner.next_back()
+    }
+}
+#+END_SRC
+
+**** ExactSizeIterator
+
+#+BEGIN_SRC rust
+impl<A> ExactSizeIterator for IterMut<'_, A> {}
+#+END_SRC
+
+**** FusedIterator
+
+#+BEGIN_SRC rust
+impl<A> FusedIterator for IterMut<'_, A> {}
+#+END_SRC
+
+**** TrustedLen (Unstable)
+
+#+BEGIN_SRC rust
+unsafe impl<A> TrustedLen for IterMut<'_, A> {}
+#+END_SRC
+
+** <<struct-intoiter>> IntoIter
+
+[[trait-intoiterator][IntoIterator]] 所回傳的結構。
+
+*** Definition
+
+#+BEGIN_SRC rust
+#[derive(Clone, Debug)]
+pub struct IntoIter<A> {
+    inner: Item<A>,
+}
+#+END_SRC
+
+*** Trait Implementations
+
+**** Iterator
+
+#+BEGIN_SRC rust
+impl<A> Iterator for IntoIter<A> {
+    type Item = A;
+
+    #[inline]
+    fn next(&mut self) -> Option<A> {
+        self.inner.next()
+    }
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
+    }
+}
+#+END_SRC
+
+與前面都一樣，利用了共同的內容結構 [[struct-item][Item]] 的實作完成特徵的實作。
+
+**** DoubleEndedIterator
+
+#+BEGIN_SRC rust
+impl<A> DoubleEndedIterator for IntoIter<A> {
+    #[inline]
+    fn next_back(&mut self) -> Option<A> {
+        self.inner.next_back()
+    }
+}
+#+END_SRC
+
+**** ExactSizeIterator
+
+#+BEGIN_SRC rust
+impl<A> ExactSizeIterator for IntoIter<A> {}
+#+END_SRC
+
+**** FusedIterator
+
+#+BEGIN_SRC rust
+impl<A> FusedIterator for IntoIter<A> {}
+#+END_SRC
+
+**** TrustedLen
+
+#+BEGIN_SRC rust
+#[unstable(feature = "trusted_len", issue = "37572")]
+unsafe impl<A> TrustedLen for IntoIter<A> {}
+#+END_SRC
+
+** <<struct-noneerror>> NoneError (Unstable)
+
+#+BEGIN_SRC rust
+#[unstable(feature = "try_trait", issue = "42327")]
+#[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
+pub struct NoneError;
+#+END_SRC
