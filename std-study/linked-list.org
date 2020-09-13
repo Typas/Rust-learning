@@ -3,12 +3,218 @@
 
 [[https://github.com/rust-lang/rust/blob/master/library/alloc/src/collections/linked_list.rs][Source Code Location]]
 
+* <<use>> Use
+
+#+BEGIN_SRC rust
+use core::cmp::Ordering;
+use core::fmt;
+use core::hash::{Hash, Hasher};
+use core::iter::{FromIterator, FusedIterator};
+use core::marker::PhantomData;
+use core::mem;
+use core::ptr::NonNull;
+
+use super::SpecExtend;
+use crate::boxed::Box;
+#+END_SRC
+
+* <<definition>> Definition
+
+#+BEGIN_SRC rust
+pub struct LinkedList<T> {
+    head: Option<NonNull<Node<T>>>,
+    tail: Option<NonNull<Node<T>>>,
+    len: usize,
+    marker: PhantomData<Box<Node<T>>>,
+}
+#+END_SRC
+
+其中的 [[https://doc.rust-lang.org/beta/core/ptr/struct.NonNull.html][NonNull]] 是用了 [[use][core::ptr::NonNull]] ，並以 =Option= 保證指標不會指到 null 。  [[struct-node][Node]] 的定義在下面。 =marker= 用來對編譯器說這個型態會執行得像存有 =Box<Node<T>>= 一樣，就算這個東西從不存在。這個標記在編譯後就會被消掉，佔用空間與其他 =core::marker= 裡的一樣為零。
+
 * Associated Functions
 
 * Const Methods
 
 * Safe Methods
 
+** Public Methods
+
+** Private Methods
+
+*** <<method-private-push_front_node>> =push_front_node=
+
+#+BEGIN_SRC rust
+#[inline]
+fn push_front_node(&mut self, mut node: Box<Node<T>>) {
+    // This method takes care not to create mutable references to whole nodes,
+    // to maintain validity of aliasing pointers into `element`.
+    unsafe {
+        node.next = self.head;
+        node.prev = None;
+        let node = Some(Box::leak(node).into());
+
+        match self.head {
+            None => self.tail = node,
+            // Not creating new mutable (unique!) references overlapping `element`.
+            Some(head) => (*head.as_ptr()).prev = node,
+        }
+
+        self.head = node;
+        self.len += 1;
+    }
+}
+#+END_SRC
+
+整段都是不安程式碼，加上沒有安全保證，太棒啦。
+前兩句因為是推一個頭節點進來，所以此節點前面不會有東西，而後面會是原本的頭。第三句用到了遮蔽把原本的 =mut node= 遮起來避免後面改到。 [[https://doc.rust-lang.org/alloc/boxed/struct.Box.html#method.leak][leak()]] 這個關聯函數會回傳一個 =&'a mut Node<T>= 型態的值，再用 =into()= 轉成 =Box<Node<T>>= 型態後？這邊我不了解為什麼可以用到 =into()= ，因為沒看到有實作 [[https://doc.rust-lang.org/core/convert/trait.Into.html][core::convert::Into]] 的地方。外面加上 =Some= 做成 =Option<Box<Node<T>>>= 型態後與 =node= 綁定。
+第二段是配對敘述。當原本是空的 =LinkedList= 時，尾節點也要改成 =node= ；而當不是空的時候，要將原本的頭節點的前面改成 =node= ，首先要用 [[https://doc.rust-lang.org/core/ptr/struct.NonNull.html#method.as_ptr][as_ptr()]] 拿出一個內容可變指標後再解參照包起來，此時會是一個等同 =Node<T>= 型態的東西，再用 =.prev= 修改裡面的值為 =node= 。
+第三段是共同要做的事，頭節點改成 =node= ，長度加一。長度加一那句不應該被 =unsafe= 包住。
+
 * Unsafe Methods
 
+** Public Methods
+
+** Private Methods
+
 * Trait Implementations
+
+* Structs
+
+** <<struct-node>> Node
+
+*** Definition
+
+#+BEGIN_SRC rust
+struct Node<T> {
+    next: Option<NonNull<Node<T>>>,
+    prev: Option<NonNull<Node<T>>>,
+    element: T,
+}
+#+END_SRC
+
+一個雙向連結的結構，為何用 =Option<NonNull<Node<T>>>= 而不是用 =Box<Node<T>>= 我認為跟所有權還有借用有很大關係。考慮到 rust 中的 =LinkedList= 不像函數式語言的全部不可變只能建立新的，要達成內部可變性只能用 =RefCell<T>= 完成，而要多所有權則必須用 =Rc<T>= ，兩個合在一起就是執行期多了大量檢查，會太慢。因此最後還是使用到非常接近原始指標的 =NonNull= 來加速。
+
+*** Associated Functions
+
+**** <<struct-node-fn-new>> new
+
+#+BEGIN_SRC rust
+impl<T> Node<T> {
+    fn new(element: T) -> Self {
+        Node { next: None, prev: None, element }
+    }
+}
+#+END_SRC
+
+新的節點，前後都未連接，注意 =element= 所有權會被轉移進裡面。
+
+**** <<struct-node-fn-into_element>> into_element
+
+#+BEGIN_SRC rust
+impl<T> Node<T> {
+    fn into_element(self: Box<Self>) -> T {
+        self.element
+    }
+}
+#+END_SRC
+
+這個寫法我看不太懂，需要有人來解釋一下。
+
+** <<struct iter>> Iter
+
+***  Definition
+
+#+BEGIN_SRC rust
+pub struct Iter<'a, T: 'a> {
+    head: Option<NonNull<Node<T>>>,
+    tail: Option<NonNull<Node<T>>>,
+    len: usize,
+    marker: PhantomData<&'a Node<T>>,
+}
+#+END_SRC
+
+[[method-iter][iter()]] 所回傳的結構。
+
+***  Trait Implementations
+
+**** Debug
+
+#+BEGIN_SRC rust
+impl<T: fmt::Debug> fmt::Debug for Iter<'_, T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_tuple("Iter").field(&self.len).finish()
+    }
+}
+#+END_SRC
+
+用到了 [[use][core::fmt]] 中的 [[https://doc.rust-lang.org/beta/core/fmt/trait.Debug.html][Debug]] ， [[https://doc.rust-lang.org/core/fmt/struct.Formatter.html#method.debug_tuple][debug_tuple()]] 是 =core::fmt::Formatter= 的一個方法，將 =f= 與 ="Iter"= 轉成一個除錯用的元組，再用 [[https://doc.rust-lang.org/core/fmt/struct.DebugTuple.html#method.field][field()]] 加入長度訊息，最後再用 [[https://doc.rust-lang.org/core/fmt/struct.DebugTuple.html#method.finish][finish()]] 回傳一個型態為 =core::fmt::Result= 的值。
+
+**** Clone
+
+#+BEGIN_SRC rust
+// FIXME(#26925) Remove in favor of `#[derive(Clone)]`
+impl<T> Clone for Iter<'_, T> {
+    fn clone(&self) -> Self {
+        Iter { ..*self }
+    }
+}
+#+END_SRC
+
+這邊使用了 [[https://doc.rust-lang.org/book/ch05-01-defining-structs.html#creating-instances-from-other-instances-with-struct-update-syntax][結構更新語法]] 來直接複製全部欄位，但用 =derive= 巨集為什麼會發生問題？
+
+** <<struct itermut>> IterMut
+
+*** Definition
+
+#+BEGIN_SRC rust
+pub struct IterMut<'a, T: 'a> {
+    // We do *not* exclusively own the entire list here, references to node's `element`
+    // have been handed out by the iterator! So be careful when using this; the methods
+    // called must be aware that there can be aliasing pointers to `element`.
+    list: &'a mut LinkedList<T>,
+    head: Option<NonNull<Node<T>>>,
+    tail: Option<NonNull<Node<T>>>,
+    len: usize,
+}
+#+END_SRC
+
+*** Trait Implementations
+
+**** Debug
+
+#+BEGIN_SRC rust
+impl<T: fmt::Debug> fmt::Debug for IterMut<'_, T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_tuple("IterMut").field(&self.list).field(&self.len).finish()
+    }
+}
+#+END_SRC
+
+與 [[struct-iter][Iter]] 的 =Debug= 實作相似，多了一個 =list= 欄位。
+
+** <<struct-intoiter>> IntoIter
+
+*** Definition
+
+#+BEGIN_SRC rust
+#[derive(Clone)]
+pub struct IntoIter<T> {
+    list: LinkedList<T>,
+}
+#+END_SRC
+
+整個 =LinkedList= 本身就是一個很好的迭代器結構，所以拿來就好了。
+
+*** Trait Implementations
+
+**** Debug
+
+#+BEGIN_SRC rust
+impl<T: fmt::Debug> fmt::Debug for IntoIter<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_tuple("IntoIter").field(&self.list).finish()
+    }
+}
+#+END_SRC
+
+與 [[struct-iter][Iter]] 的 =Debug= 實作相似，新增的欄位不同。
