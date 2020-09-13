@@ -13,7 +13,6 @@
 - hash map
 - heap
 - mutex
-- node
 - panic
 - stack
 - vector
@@ -95,6 +94,7 @@
 | move                   | 移交         |
 | mutable                | 可變的       |
 | newtype pattern        | 新型態模式   |
+| node                   | 節點         |
 | object oriented        | 物件導向     |
 | object safety          | 物件安全性   |
 | operator               | 運算子       |

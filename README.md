@@ -22,7 +22,6 @@
 * [Chapter 19](./the-book/chapter-19.org): Advanced Features
 * [Macros](./the-book/chapter-19-macro.org): Macros (not done)
 * [Chapter 20](./the-book/chapter-20.org): Final Project: Building a Multithreaded Web Server (not done)
-* [Terms](./the-book/terms.org): Translation of Terms
 
 ## Studies of Standard Library
 對[標準函數庫](https://github.com/rust-lang/rust)的一些程式碼研讀。
@@ -35,4 +34,5 @@
   * [Iterator](./std-study/iterator.org) (TODO)
 
 ## Other Informations
+* [Terms](./terms.org): Translation of Terms
 * [Useful Crates](./de-facto-crates.org): Almost Standard Crates
