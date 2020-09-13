@@ -97,13 +97,100 @@ fn pop_front_node(&mut self) -> Option<Box<Node<T>>> {
 閉包裡的第一行是把 =node= 也就是原本的頭節點用遮蔽換成綁定到新型態上。其中因為有強制解參的關係，可以不用再做像 C++ 那樣管要用 =->= 還是 =.= ，直接用 =.as_ptr()= 就結束了。 [[https://doc.rust-lang.org/alloc/boxed/struct.Box.html#method.from_raw][from_raw()]] 是個不安關聯函數所以需要用 =unsafe= 包住。
 第二行是把頭節點置換成後一個，因為 =Option::map()= 保證只有 =Some= 能進入閉包，所以不用考慮到本身為 =None= 的情況。
 第二段的配對， =self.head= 已經被置換完畢，所以必須考慮已經被清空的情況。當清空時則尾節點也須設為 =None= ；當不是空的情況下則須把新的頭的前節點設為 =None= 以免出現不定指標。
-最後是共通的將長度減一，與回傳原本的頭節點。
+最後是共通的將長度減一，與回傳原本的頭節點，這段不該包在 =unsafe= 區段裡面。
+
+*** <<method-private-push_back_node>> =push_back_node=
+
+#+BEGIN_SRC rust
+#[inline]
+fn push_back_node(&mut self, mut node: Box<Node<T>>) {
+    // This method takes care not to create mutable references to whole nodes,
+    // to maintain validity of aliasing pointers into `element`.
+    unsafe {
+        node.next = None;
+        node.prev = self.tail;
+        let node = Some(Box::leak(node).into());
+
+        match self.tail {
+            None => self.head = node,
+            // Not creating new mutable (unique!) references overlapping `element`.
+            Some(tail) => (*tail.as_ptr()).next = node,
+        }
+
+        self.tail = node;
+        self.len += 1;
+    }
+}
+#+END_SRC
+
+與 [[method-private-push_front_node][push_front_node()]] 成對，寫法一樣位置有互換。
+
+*** <<method-private-pop_back_node>> =pop_back_node=
+
+#+BEGIN_SRC rust
+#[inline]
+fn pop_back_node(&mut self) -> Option<Box<Node<T>>> {
+    // This method takes care not to create mutable references to whole nodes,
+    // to maintain validity of aliasing pointers into `element`.
+    self.tail.map(|node| unsafe {
+        let node = Box::from_raw(node.as_ptr());
+        self.tail = node.prev;
+
+        match self.tail {
+            None => self.head = None,
+            // Not creating new mutable (unique!) references overlapping `element`.
+            Some(tail) => (*tail.as_ptr()).next = None,
+        }
+
+        self.len -= 1;
+        node
+    })
+}
+#+END_SRC
+
+與 [[method-private-pop_front_node][pop_front_node()]] 成對，寫法一樣位置有互換。
 
 * Unsafe Methods
 
 ** Public Methods
 
 ** Private Methods
+
+<<method-unsafe-private-unlink_node>> =unlink_node=
+
+#+BEGIN_SRC rust
+/// Unlinks the specified node from the current list.
+///
+/// Warning: this will not check that the provided node belongs to the current list.
+///
+/// This method takes care not to create mutable references to `element`, to
+/// maintain validity of aliasing pointers.
+#[inline]
+unsafe fn unlink_node(&mut self, mut node: NonNull<Node<T>>) {
+    let node = unsafe { node.as_mut() }; // this one is ours now, we can create an &mut.
+
+    // Not creating new mutable (unique!) references overlapping `element`.
+    match node.prev {
+        Some(prev) => unsafe { (*prev.as_ptr()).next = node.next },
+        // this node is the head node
+        None => self.head = node.next,
+    };
+
+    match node.next {
+        Some(next) => unsafe { (*next.as_ptr()).prev = node.prev },
+        // this node is the tail node
+        None => self.tail = node.prev,
+    };
+
+    self.len -= 1;
+}
+#+END_SRC
+
+第一行用遮蔽把參數的 =node= 給改綁到其轉成的可變參考上，避免後面操作時把所有權丟了。被拔掉的節點生命期到這個函數結束時結束，而第一行用遮蔽讓參數的所有權在舊的綁定上，但兩個綁定的生命期一樣在函數結束時結束，所以不會出現任何的誤把所有權轉移的事情。
+第二段將此節點的前一節點與此節點的後一節點連接，如果沒有前一節點則此節點為頭節點，需要換頭。
+第三段將此節點的後一節點與此節點的前一節點連接，如果沒有後一節點則此節點為尾節點，需要換尾。
+最後將長度減一，這個函數會直接把該節點丟掉。
+注意這個節點並不會被保證存在於自身，以保證有 O(1) 的執行效能。
 
 * Trait Implementations
 
