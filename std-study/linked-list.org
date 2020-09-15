@@ -33,6 +33,17 @@ pub struct LinkedList<T> {
 
 * Associated Functions
 
+** <<fn-new>> =new=
+
+#+BEGIN_SRC rust
+#[inline]
+pub const fn new() -> Self {
+    LinkedList { head: None, tail: None, len: 0, marker: PhantomData }
+}
+#+END_SRC
+
+新的一條必為空的。
+
 * Const Methods
 
 * Safe Methods
@@ -262,7 +273,116 @@ unsafe fn splice_nodes(
 
 因為要達成 O(1) 效能，所以不保證全部的參數節點合法。
 
+*** <<method-unsafe-private-split_off_before_node>> =split_off_before_node=
+
+#+BEGIN_SRC rust
+#[inline]
+unsafe fn split_off_before_node(
+    &mut self,
+    split_node: Option<NonNull<Node<T>>>,
+    at: usize,
+) -> Self {
+    // The split node is the new head node of the second part
+    if let Some(mut split_node) = split_node {
+        let first_part_head;
+        let first_part_tail;
+        unsafe {
+            first_part_tail = split_node.as_mut().prev.take();
+        }
+        if let Some(mut tail) = first_part_tail {
+            unsafe {
+                tail.as_mut().next = None;
+            }
+            first_part_head = self.head;
+        } else {
+            first_part_head = None;
+        }
+
+        let first_part = LinkedList {
+            head: first_part_head,
+            tail: first_part_tail,
+            len: at,
+            marker: PhantomData,
+        };
+
+        // Fix the head ptr of the second part
+        self.head = Some(split_node);
+        self.len = self.len - at;
+
+        first_part
+    } else {
+        mem::replace(self, LinkedList::new())
+    }
+}
+#+END_SRC
+
+回傳值是被丟出來的 =LinkedList= ，剩下的是以 =split_node= 為頭節點的 =LinkedList= 。特殊情況是 =split_node= 為 =None= ，代表剩下空的，直接以 [[fn-new][LinkedList::new()]] 來替換。一般情況則是以 =split_node= 為頭，但是這裡一樣為了速度不檢查此節點是否在裡面，也不檢查長度的正確性。
+一般情況的開頭先宣告新的頭與尾。再用 [[https://doc.rust-lang.org/core/option/enum.Option.html#method.take][Option::take()]] 把開頭的前節點置換成 =None= ，並將原前節點丟給 =first_part_tail= 。
+後面的 =if let= 用了魔法，讓原本不可變的 =first_part_tail= 用配對語法裡的 =mut= 變成可變後，再用不安區段修改裡面的內容。除此之外此段就是確認新的一條是不是空的，如果是就是頭尾都設為 =None= ，否則新頭設為舊的頭。
+再來是把新的一條建立起來， =marker= 只是標記，但為何可以縮寫成如此？
+最後把原本那條的頭跟長度修改成正確的值，回傳新的一條。
+
+*** <<method-unsafe-private-split_off_after_node>> =split_off_after_node=
+
+#+BEGIN_SRC rust
+#[inline]
+unsafe fn split_off_after_node(
+    &mut self,
+    split_node: Option<NonNull<Node<T>>>,
+    at: usize,
+) -> Self {
+    // The split node is the new tail node of the first part and owns
+    // the head of the second part.
+    if let Some(mut split_node) = split_node {
+        let second_part_head;
+        let second_part_tail;
+        unsafe {
+            second_part_head = split_node.as_mut().next.take();
+        }
+        if let Some(mut head) = second_part_head {
+            unsafe {
+                head.as_mut().prev = None;
+            }
+            second_part_tail = self.tail;
+        } else {
+            second_part_tail = None;
+        }
+
+        let second_part = LinkedList {
+            head: second_part_head,
+            tail: second_part_tail,
+            len: self.len - at,
+            marker: PhantomData,
+        };
+
+        // Fix the tail ptr of the first part
+        self.tail = Some(split_node);
+        self.len = at;
+
+        second_part
+    } else {
+        mem::replace(self, LinkedList::new())
+    }
+}
+#+END_SRC
+
+與 [[method-unsafe-private-split_off_before_node][前面]] 相似，只是 =split_node= 這次是當舊的尾節點。
+
 * Trait Implementations
+
+** <<trait-default>> Default
+
+#+BEGIN_SRC rust
+impl<T> Default for LinkedList<T> {
+    /// Creates an empty `LinkedList<T>`.
+    #[inline]
+    fn default() -> Self {
+        Self::new()
+    }
+}
+#+END_SRC
+
+預設直接調用 [[fn-new][LinkedList::new()]] 。
 
 * Structs
 
