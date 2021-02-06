@@ -50,6 +50,68 @@ pub const fn new() -> Self {
 
 ** Public Methods
 
+*** <<method-append>> =append=
+
+#+BEGIN_SRC rust
+pub fn append(&mut self, other: &mut Self) {
+    match self.tail {
+        None => mem::swap(self, other),
+        Some(mut tail) => {
+            // `as_mut` is okay here because we have exclusive access to the entirety
+            // of both lists.
+            if let Some(mut other_head) = other.head.take() {
+                unsafe {
+                    tail.as_mut().next = Some(other_head);
+                    other_head.as_mut().prev = Some(tail);
+                }
+
+                self.tail = other.tail.take();
+                self.len += mem::replace(&mut other.len, 0);
+            }
+        }
+    }
+}
+#+END_SRC
+
+這邊用到了 [[https://doc.rust-lang.org/core/mem/fn.swap.html][core::mem::swap]] 這個函數，在本身為空的時候，直接把別人的拿來。當不為空時，如果另一個 =LinkedList= 為空則不用做事；否則以 [[https://doc.rust-lang.org/core/option/enum.Option.html#method.take][Option::take()]] 來取得另一個頭的所有權，並用不安區段操作原始指標，將自身的尾與另一個頭接起來。最後再將自身的尾更新成另一個的尾節點，並用 [[https://doc.rust-lang.org/core/mem/fn.replace.html][core::mem::replace()]] 來達成同時置換與更新長度。
+
+*** <<method-unstable-prepend>> =prepend=
+
+#+BEGIN_SRC rust
+#[unstable(feature = "linked_list_prepend", issue = "none")]
+pub fn prepend(&mut self, other: &mut Self) {
+    match self.head {
+        None => mem::swap(self, other),
+        Some(mut head) => {
+            // `as_mut` is okay here because we have exclusive access to the entirety
+            // of both lists.
+            if let Some(mut other_tail) = other.tail.take() {
+                unsafe {
+                    head.as_mut().prev = Some(other_tail);
+                    other_tail.as_mut().next = Some(head);
+                }
+
+                self.head = other.head.take();
+                self.len += mem::replace(&mut other.len, 0);
+            }
+        }
+    }
+}
+#+END_SRC
+
+大致上與 [[method-append][append()]] 相同，除了頭尾的對調以外。
+
+*** <<method-iter>> =iter=
+
+#+BEGIN_SRC rust
+#[inline]
+pub fn iter(&self) -> Iter<'_, T> {
+    Iter { head: self.head, tail: self.tail, len: self.len, marker: PhantomData }
+}
+#+END_SRC
+
+建立一個 [[struct-iter][Iter]] 結構，避免特徵污染。
+
 ** Private Methods
 
 *** <<method-private-push_front_node>> =push_front_node=

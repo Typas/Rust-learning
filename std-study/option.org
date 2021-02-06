@@ -399,7 +399,7 @@ pub fn get_or_insert(&mut self, v: T) -> &mut T {
 #[inline]
 pub fn get_or_insert_with<F: FnOnce() -> T>(&mut self, f: F) -> &mut T {
     if let None = *self {
-        *self = Some(f());
+        ,*self = Some(f());
     }
 
     match *self {
