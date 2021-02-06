@@ -1,84 +1,84 @@
 
 # Table of Contents
 
-1.  [Use](#org491f4dc)
-2.  [Definition](#orgb2f369e)
-3.  [Associated Functions](#org773b45d)
-4.  [Const Methods](#org33919af)
-    1.  [Stable, but unstable const, issue 67441](#orgeba33ed)
-        1.  [`is_some`](#orgc881729)
-        2.  [`is_none`](#orgb30f242)
-        3.  [`unwrap`](#org6a4bcae)
-        4.  [`iter`](#org93e9770)
-5.  [Safe Methods](#org48e1e8b)
-    1.  [Stable](#org7beb8e7)
-        1.  [`as_ref`](#orgedfc008)
-        2.  [`as_mut`](#org0765250)
-        3.  [`as_pin_ref`](#org4e36e60)
-        4.  [`as_pin_mut`](#orgb90e766)
-        5.  [`expect`](#org6aaf1af)
-        6.  [`expect_failed`](#orgbc0c32e)
-        7.  [`unwrap_or`](#orgd9d9469)
-        8.  [`unwrap_or_else`](#org9b8001d)
-        9.  [`map`](#org83de675)
-        10. [`map_or`](#orgabc9be7)
-        11. [`map_or_else`](#org6caa29e)
-        12. [`ok_or`](#org29464f4)
-        13. [`ok_or_else`](#org18e5e07)
-        14. [`iter_mut`](#orgbda5de5)
-        15. [`and`](#org23b1081)
-        16. [`and_then`](#org94199e5)
-        17. [`filter`](#org4c01dee)
-        18. [`or`](#org4ee461e)
-        19. [`or_else`](#orga1c193c)
-        20. [`xor`](#org8963367)
-        21. [`get_or_insert`](#org95a593f)
-        22. [`get_or_insert_with`](#org256679d)
-        23. [`take`](#orgd90275d)
-        24. [`replace`](#org3f41dc4)
-        25. [`zip`](#orgb38d082)
-        26. [`copied`](#orgd280072)
-        27. [`cloned`](#org44387f1)
-        28. [`unwrap_or_default`](#org22a4107)
-        29. [`as_deref`](#org55e4edb)
-        30. [`as_deref_mut`](#org3aaebbf)
-        31. [`transpose`](#orgb49ae35)
-    2.  [Unstable](#org8386385)
-        1.  [`contains`](#orgae5ef88)
-        2.  [`zip_with`](#orge482509)
-        3.  [`expect_none`](#org1da3ab4)
-        4.  [`expect_none_failed`](#org42d7606)
-        5.  [`unwrap_none`](#org8a34fe3)
-        6.  [`flatten`](#orgd8aa7ac)
-6.  [Unsafe Methods](#orgbcf578e)
-7.  [Trait Implementations](#org231e6fe)
-    1.  [Clone](#org230dbb2)
-    2.  [Default](#org7ecf6de)
-    3.  [IntoIterator](#org92840e0)
-    4.  [From](#orge14fcae)
-    5.  [FromIterator](#org262aceb)
-    6.  [ops::Try (Unstable)](#org60ddc38)
-8.  [Structs](#org13abbdd)
-    1.  [Item](#orga7bed55)
-        1.  [Definition](#org5d15c68)
-        2.  [Trait Implementations](#org6d01ead)
-    2.  [Iter](#org00ca733)
-        1.  [Definition](#orgc97910d)
-        2.  [Trait Implementations](#orge41eed3)
-    3.  [IterMut](#org16a105c)
-        1.  [Definition](#org7822996)
-        2.  [Trait Implementations](#org7ea7131)
-    4.  [IntoIter](#org35ef0eb)
-        1.  [Definition](#org0790159)
-        2.  [Trait Implementations](#org85d1e17)
-    5.  [NoneError (Unstable)](#orgb5f7831)
+1.  [Use](#orgebb7d02)
+2.  [Definition](#orgd407e53)
+3.  [Associated Functions](#org92561f6)
+4.  [Const Methods](#org2e8165f)
+    1.  [Stable, but unstable const, issue 67441](#org0720fc9)
+        1.  [`is_some`](#orgf7b5b70)
+        2.  [`is_none`](#org4d06357)
+        3.  [`unwrap`](#org828978c)
+        4.  [`iter`](#org2f8c16c)
+5.  [Safe Methods](#org0679317)
+    1.  [Stable](#orgdb445e0)
+        1.  [`as_ref`](#org9f5e8d6)
+        2.  [`as_mut`](#orge2f9381)
+        3.  [`as_pin_ref`](#org60f59de)
+        4.  [`as_pin_mut`](#orga2e1f49)
+        5.  [`expect`](#orgf612e70)
+        6.  [`expect_failed`](#orgc88fca0)
+        7.  [`unwrap_or`](#org7c3677d)
+        8.  [`unwrap_or_else`](#orge722dc8)
+        9.  [`map`](#org2aeb92c)
+        10. [`map_or`](#org3d9be07)
+        11. [`map_or_else`](#orgd408fca)
+        12. [`ok_or`](#orga5c2ab9)
+        13. [`ok_or_else`](#org1cd1fe9)
+        14. [`iter_mut`](#orgdf6b4f8)
+        15. [`and`](#org6905454)
+        16. [`and_then`](#orga85fae4)
+        17. [`filter`](#orgb9b3c4c)
+        18. [`or`](#orgfc33591)
+        19. [`or_else`](#orga6f34f5)
+        20. [`xor`](#org2360269)
+        21. [`get_or_insert`](#org3c2c455)
+        22. [`get_or_insert_with`](#org3a37fd0)
+        23. [`take`](#org6926e76)
+        24. [`replace`](#orgd19ec31)
+        25. [`zip`](#org0a49fff)
+        26. [`copied`](#org034771b)
+        27. [`cloned`](#org6338b9b)
+        28. [`unwrap_or_default`](#orgc64124f)
+        29. [`as_deref`](#org6641f18)
+        30. [`as_deref_mut`](#org14072a8)
+        31. [`transpose`](#orgc80a95f)
+    2.  [Unstable](#org06eb209)
+        1.  [`contains`](#org4c72238)
+        2.  [`zip_with`](#org5db8cc4)
+        3.  [`expect_none`](#org59452bf)
+        4.  [`expect_none_failed`](#org9fbde6d)
+        5.  [`unwrap_none`](#orgc54cfc1)
+        6.  [`flatten`](#org8399be7)
+6.  [Unsafe Methods](#orgc4b10ac)
+7.  [Trait Implementations](#org20a0349)
+    1.  [Clone](#org20b5099)
+    2.  [Default](#orgdb6d882)
+    3.  [IntoIterator](#orgba5baa3)
+    4.  [From](#orge1a9cbf)
+    5.  [FromIterator](#org5326fdd)
+    6.  [ops::Try (Unstable)](#orgb772959)
+8.  [Structs](#orgb88569e)
+    1.  [Item](#org25125d5)
+        1.  [Definition](#orgeb3401c)
+        2.  [Trait Implementations](#org840259e)
+    2.  [Iter](#orgb127045)
+        1.  [Definition](#org6022e0e)
+        2.  [Trait Implementations](#orgd9103a9)
+    3.  [IterMut](#orgcfb31b8)
+        1.  [Definition](#org18ba0bf)
+        2.  [Trait Implementations](#orgfc24096)
+    4.  [IntoIter](#org209937a)
+        1.  [Definition](#org7ca4286)
+        2.  [Trait Implementations](#orga99761a)
+    5.  [NoneError (Unstable)](#orgbe8dad7)
 
 [Source Code Location](https://github.com/rust-lang/rust/blob/master/library/core/src/option.rs)
 
 
-<a id="org491f4dc"></a>
+<a id="orgebb7d02"></a>
 
-# <a id="org454ae0f"></a> Use
+# <a id="org1db1c36"></a> Use
 
     use core::iter::{FromIterator, FusedIterator, TrustedLen};
     use core::pin::Pin;
@@ -88,7 +88,7 @@
     };
 
 
-<a id="orgb2f369e"></a>
+<a id="orgd407e53"></a>
 
 # Definition
 
@@ -103,24 +103,24 @@
 在去除一些給編譯器看的屬性巨集後，是非常簡單的定義。
 
 
-<a id="org773b45d"></a>
+<a id="org92561f6"></a>
 
 # Associated Functions
 
 
-<a id="org33919af"></a>
+<a id="org2e8165f"></a>
 
 # Const Methods
 
 
-<a id="orgeba33ed"></a>
+<a id="org0720fc9"></a>
 
 ## Stable, but unstable const, issue 67441
 
 
-<a id="orgc881729"></a>
+<a id="orgf7b5b70"></a>
 
-### <a id="org613180e"></a> `is_some`
+### <a id="org49682a4"></a> `is_some`
 
     #[inline]
     pub const fn is_some(&self) -> bool {
@@ -130,9 +130,9 @@
 用到了 [matches](https://doc.rust-lang.org/std/macro.matches.html) 巨集，在對應到任何有值的東西時回傳 `true` ，反之則回傳 `false` 。
 
 
-<a id="orgb30f242"></a>
+<a id="org4d06357"></a>
 
-### <a id="orgd6bd443"></a> `is_none`
+### <a id="orge49c4be"></a> `is_none`
 
     #[inline]
     pub const fn is_none(&self) -> bool {
@@ -142,9 +142,9 @@
 上面的 `is_some` 的反轉，只是我不太能理解為什麼是用 `Some` 而不是 `None` 去對應。
 
 
-<a id="org6a4bcae"></a>
+<a id="org828978c"></a>
 
-### <a id="orgcafeea3"></a> `unwrap`
+### <a id="org08c9961"></a> `unwrap`
 
     #[inline]
     #[track_caller]
@@ -158,31 +158,31 @@
 就是一個在 `None` 會噴死你的函數，會拿走所有權。
 
 
-<a id="org93e9770"></a>
+<a id="org2f8c16c"></a>
 
-### <a id="org2b777a0"></a> `iter`
+### <a id="org498d766"></a> `iter`
 
     #[inline]
     pub const fn iter(&self) -> Iter<'_, T> {
         Iter { inner: Item { opt: self.as_ref() } }
     }
 
-回傳的型態 [Iter](#org5092ef1) 是模組內定義的一個結構。
+回傳的型態 [Iter](#orgb1fd13a) 是模組內定義的一個結構。
 
 
-<a id="org48e1e8b"></a>
+<a id="org0679317"></a>
 
 # Safe Methods
 
 
-<a id="org7beb8e7"></a>
+<a id="orgdb445e0"></a>
 
 ## Stable
 
 
-<a id="orgedfc008"></a>
+<a id="org9f5e8d6"></a>
 
-### <a id="org557a319"></a> `as_ref`
+### <a id="org372dd0d"></a> `as_ref`
 
     #[inline]
     pub const fn as_ref(&self) -> Option<&T> {
@@ -195,9 +195,9 @@
 用到了 `match` 裡的 `ref` 關鍵字，配對的值本身型態是 `U` 時，加上 `ref` 則在分支內的變數 `x` 會是 `&U` 型態。
 
 
-<a id="org0765250"></a>
+<a id="orge2f9381"></a>
 
-### <a id="org8fe292d"></a> `as_mut`
+### <a id="orga8f6f30"></a> `as_mut`
 
     #[inline]
     pub fn as_mut(&mut self) -> Option<&mut T> {
@@ -210,9 +210,9 @@
 同上，多用了一個 `mut` 關鍵字，型態改變成 `&mut U` 。
 
 
-<a id="org4e36e60"></a>
+<a id="org60f59de"></a>
 
-### <a id="org35dc1f3"></a> `as_pin_ref`
+### <a id="org94f2e98"></a> `as_pin_ref`
 
     #[inline]
     pub fn as_pin_ref(self: Pin<&Self>) -> Option<Pin<&T>> {
@@ -221,13 +221,13 @@
         unsafe { Pin::get_ref(self).as_ref().map(|x| Pin::new_unchecked(x)) }
     }
 
-[use](#org454ae0f)
+[use](#org1db1c36)
 TODO: usage of `core::pin::Pin`
 
 
-<a id="orgb90e766"></a>
+<a id="orga2e1f49"></a>
 
-### <a id="org9cac6a5"></a> `as_pin_mut`
+### <a id="org61117c5"></a> `as_pin_mut`
 
     #[inline]
     pub fn as_pin_mut(self: Pin<&mut Self>) -> Option<Pin<&mut T>> {
@@ -236,13 +236,13 @@ TODO: usage of `core::pin::Pin`
         unsafe { Pin::get_unchecked_mut(self).as_mut().map(|x| Pin::new_unchecked(x)) }
     }
 
-[use](#org454ae0f)
+[use](#org1db1c36)
 TODO: usage of `core::pin::Pin`
 
 
-<a id="org6aaf1af"></a>
+<a id="orgf612e70"></a>
 
-### <a id="org831d933"></a> `expect`
+### <a id="org88d10ea"></a> `expect`
 
     #[inline]
     #[track_caller]
@@ -256,7 +256,7 @@ TODO: usage of `core::pin::Pin`
 裡面的 `expect_failed()` 是私有方法，在對應到 `None` 時會觸發。會拿走所有權。
 
 
-<a id="orgbc0c32e"></a>
+<a id="orgc88fca0"></a>
 
 ### `expect_failed`
 
@@ -270,9 +270,9 @@ TODO: usage of `core::pin::Pin`
 屬性巨集 `cold` 是對編譯器提示這個函數不太可能被呼叫到。問題：為何會需要獨立成一個方法？
 
 
-<a id="orgd9d9469"></a>
+<a id="org7c3677d"></a>
 
-### <a id="org8e07562"></a> `unwrap_or`
+### <a id="org036c942"></a> `unwrap_or`
 
     #[inline]
     pub fn unwrap_or(self, default: T) -> T {
@@ -285,9 +285,9 @@ TODO: usage of `core::pin::Pin`
 請注意這裡會拿走自身與 `default` 的所有權。
 
 
-<a id="org9b8001d"></a>
+<a id="orge722dc8"></a>
 
-### <a id="org7efaeb8"></a> `unwrap_or_else`
+### <a id="org6b348a1"></a> `unwrap_or_else`
 
     #[inline]
     pub fn unwrap_or_else<F: FnOnce() -> T>(self, f: F) -> T {
@@ -300,9 +300,9 @@ TODO: usage of `core::pin::Pin`
 裡面的函數 `f` 會拿走所有內部變數的所有權，自身的所有權也會被此方法拿走。
 
 
-<a id="org83de675"></a>
+<a id="org2aeb92c"></a>
 
-### <a id="org92c2d6a"></a> `map`
+### <a id="org8f55d55"></a> `map`
 
     #[inline]
     #[stable(feature = "rust1", since = "1.0.0")]
@@ -316,9 +316,9 @@ TODO: usage of `core::pin::Pin`
 利用 `f` 將自身映射到 `f(x)` 上，此方法會拿走自身的所有權。
 
 
-<a id="orgabc9be7"></a>
+<a id="org3d9be07"></a>
 
-### <a id="orgfaebe0e"></a> `map_or`
+### <a id="org70ae627"></a> `map_or`
 
     #[inline]
     pub fn map_or<U, F: FnOnce(T) -> U>(self, default: U, f: F) -> U {
@@ -328,12 +328,12 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-與 [unwrap<sub>or</sub>](#org8e07562) 相似，但 `default` 的型態為映射後的 `U` 而非原來的 `T` 。
+與 [unwrap<sub>or</sub>](#org036c942) 相似，但 `default` 的型態為映射後的 `U` 而非原來的 `T` 。
 
 
-<a id="org6caa29e"></a>
+<a id="orgd408fca"></a>
 
-### <a id="orga396c6d"></a> `map_or_else`
+### <a id="org9e1fdba"></a> `map_or_else`
 
     #[inline]
     pub fn map_or_else<U, D: FnOnce() -> U, F: FnOnce(T) -> U>(self, default: D, f: F) -> U {
@@ -343,12 +343,12 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-與 [unwrap<sub>or</sub><sub>else</sub>](#org7efaeb8) 相似，但型態為映射後的 `U` 。
+與 [unwrap<sub>or</sub><sub>else</sub>](#org6b348a1) 相似，但型態為映射後的 `U` 。
 
 
-<a id="org29464f4"></a>
+<a id="orga5c2ab9"></a>
 
-### <a id="orgc477ee5"></a> `ok_or`
+### <a id="orgcb6b289"></a> `ok_or`
 
     #[inline]
     pub fn ok_or<E>(self, err: E) -> Result<T, E> {
@@ -361,9 +361,9 @@ TODO: usage of `core::pin::Pin`
 把 `Option<T>` 型態轉成 `Result<T, E>` 型態的神方法，需要自行加上錯誤型態，兩個參數都會被拿走所有權。
 
 
-<a id="org18e5e07"></a>
+<a id="org1cd1fe9"></a>
 
-### <a id="org75a6d79"></a> `ok_or_else`
+### <a id="org4913080"></a> `ok_or_else`
 
     #[inline]
     pub fn ok_or_else<E, F: FnOnce() -> E>(self, err: F) -> Result<T, E> {
@@ -376,21 +376,21 @@ TODO: usage of `core::pin::Pin`
 從 `ok_or` 的錯誤參數改成使用一個回傳錯誤的函數。會拿走自身的所有權。
 
 
-<a id="orgbda5de5"></a>
+<a id="orgdf6b4f8"></a>
 
-### <a id="orgb0c4f94"></a> `iter_mut`
+### <a id="org4a034db"></a> `iter_mut`
 
     #[inline]
     pub fn iter_mut(&mut self) -> IterMut<'_, T> {
         IterMut { inner: Item { opt: self.as_mut() } }
     }
 
-利用新結構 [IterMut](#orgc300f9b) 來達成特徵實作的隔離。
+利用新結構 [IterMut](#org1d187d1) 來達成特徵實作的隔離。
 
 
-<a id="org23b1081"></a>
+<a id="org6905454"></a>
 
-### <a id="orgb223d6f"></a> `and`
+### <a id="org03b7b96"></a> `and`
 
     #[inline]
     pub fn and<U>(self, optb: Option<U>) -> Option<U> {
@@ -403,9 +403,9 @@ TODO: usage of `core::pin::Pin`
 與不同型態做邏輯的「且」運算，注意是回傳 `optb` 的結果，兩方的所有權都會被轉移。
 
 
-<a id="org94199e5"></a>
+<a id="orga85fae4"></a>
 
-### <a id="org745d037"></a> `and_then`
+### <a id="org3153524"></a> `and_then`
 
     #[inline]
     #[stable(feature = "rust1", since = "1.0.0")]
@@ -416,12 +416,12 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-上方邏輯「且」運算中，將參數 `optb` 改為函數 `f` 的方法。非常類似於 [map()](#org92c2d6a) ，但是在函數的定義上不同。 `map()` 使用的函數為回傳型態 `U` 的一次性函數，而 `and_then()` 則是使用回傳型態為 `Option<U>` 的一次性函數。
+上方邏輯「且」運算中，將參數 `optb` 改為函數 `f` 的方法。非常類似於 [map()](#org8f55d55) ，但是在函數的定義上不同。 `map()` 使用的函數為回傳型態 `U` 的一次性函數，而 `and_then()` 則是使用回傳型態為 `Option<U>` 的一次性函數。
 
 
-<a id="org4c01dee"></a>
+<a id="orgb9b3c4c"></a>
 
-### <a id="orgfcb2bec"></a> `filter`
+### <a id="org709077c"></a> `filter`
 
     #[inline]
     pub fn filter<P: FnOnce(&T) -> bool>(self, predicate: P) -> Self {
@@ -446,9 +446,9 @@ TODO: usage of `core::pin::Pin`
     }
 
 
-<a id="org4ee461e"></a>
+<a id="orgfc33591"></a>
 
-### <a id="orge43fa33"></a> `or`
+### <a id="org59f32e7"></a> `or`
 
     #[inline]
     pub fn or(self, optb: Option<T>) -> Option<T> {
@@ -461,9 +461,9 @@ TODO: usage of `core::pin::Pin`
 與同型態做邏輯的「或」運算，兩個參數都會被拿走所有權。在自身有值時會回傳自身，反之回傳 `optb` 。
 
 
-<a id="orga1c193c"></a>
+<a id="orga6f34f5"></a>
 
-### <a id="org4b59673"></a> `or_else`
+### <a id="orge57e1dc"></a> `or_else`
 
     #[inline]
     pub fn or_else<F: FnOnce() -> Option<T>>(self, f: F) -> Option<T> {
@@ -476,9 +476,9 @@ TODO: usage of `core::pin::Pin`
 上方邏輯「或」運算中，把 `optb` 以 `f` 這個函數取代掉的方法。注意「且」能回傳不同型態，而「或」只能回傳同一型態。
 
 
-<a id="org8963367"></a>
+<a id="org2360269"></a>
 
-### <a id="org4339f89"></a> `xor`
+### <a id="org5de4ed9"></a> `xor`
 
     #[inline]
     pub fn xor(self, optb: Option<T>) -> Option<T> {
@@ -492,21 +492,21 @@ TODO: usage of `core::pin::Pin`
 與同型態做邏輯的「互斥或」運算，兩個參數都會被拿走所有權。兩者皆有或皆無值時回傳 `None` ，其一有值時回傳有值的一邊。
 
 
-<a id="org95a593f"></a>
+<a id="org3c2c455"></a>
 
-### <a id="org5d4d66e"></a> `get_or_insert`
+### <a id="org84caffb"></a> `get_or_insert`
 
     #[inline]
     pub fn get_or_insert(&mut self, v: T) -> &mut T {
         self.get_or_insert_with(|| v)
     }
 
-以一個簡單的閉包直接把 `v` 轉移進去 [get<sub>or</sub><sub>insert</sub><sub>with</sub>()](#orgb51ce4b) ，避免了重複的程式碼。
+以一個簡單的閉包直接把 `v` 轉移進去 [get<sub>or</sub><sub>insert</sub><sub>with</sub>()](#org4e06267) ，避免了重複的程式碼。
 
 
-<a id="org256679d"></a>
+<a id="org3a37fd0"></a>
 
-### <a id="orgb51ce4b"></a> `get_or_insert_with`
+### <a id="org4e06267"></a> `get_or_insert_with`
 
     #[inline]
     pub fn get_or_insert_with<F: FnOnce() -> T>(&mut self, f: F) -> &mut T {
@@ -523,36 +523,36 @@ TODO: usage of `core::pin::Pin`
     }
 
 第一段程式碼將所有的 `None` 轉換成 `Some(f())` 。第二段程式碼中利用 `match` 的 `ref mut` 把 `T` 轉成 `&mut T` 後回傳，其中 `None` 分支由第一段保證不會被執行到，因此用一段 SAFETY 註解標示為何使用到 `unsafe` 。
-此處有用到 [core::hint](#org454ae0f) 。
+此處有用到 [core::hint](#org1db1c36) 。
 
 
-<a id="orgd90275d"></a>
+<a id="org6926e76"></a>
 
-### <a id="org9768681"></a> `take`
+### <a id="orgf18ffd9"></a> `take`
 
     #[inline]
     pub fn take(&mut self) -> Option<T> {
         mem::take(self)
     }
 
-此處用到 [core::mem](#org454ae0f) 的 [take()](https://doc.rust-lang.org/core/mem/fn.take.html) 。這個函數需要 `Option` 自身的 [Default](#org90fb6b5) 特徵實作，會將內部型態為 `T` 的值以預設值取代，並回傳被取代的值。若這個型態沒有標註為 `Copy` 特徵，則回傳會拿走所有權。
+此處用到 [core::mem](#org1db1c36) 的 [take()](https://doc.rust-lang.org/core/mem/fn.take.html) 。這個函數需要 `Option` 自身的 [Default](#org8218958) 特徵實作，會將內部型態為 `T` 的值以預設值取代，並回傳被取代的值。若這個型態沒有標註為 `Copy` 特徵，則回傳會拿走所有權。
 
 
-<a id="org3f41dc4"></a>
+<a id="orgd19ec31"></a>
 
-### <a id="orgf706d2c"></a> `replace`
+### <a id="org8a69aa4"></a> `replace`
 
     #[inline]
     pub fn replace(&mut self, value: T) -> Option<T> {
         mem::replace(self, Some(value))
     }
 
-此處用到 [core::mem](#org454ae0f) 的 [replace()](https://doc.rust-lang.org/core/mem/fn.replace.html) 。這個函數會將內部的值以 `value` 取代，並回傳原本的值。
+此處用到 [core::mem](#org1db1c36) 的 [replace()](https://doc.rust-lang.org/core/mem/fn.replace.html) 。這個函數會將內部的值以 `value` 取代，並回傳原本的值。
 
 
-<a id="orgb38d082"></a>
+<a id="org0a49fff"></a>
 
-### <a id="org8bf921f"></a> `zip`
+### <a id="org0645e76"></a> `zip`
 
     pub fn zip<U>(self, other: Option<U>) -> Option<(T, U)> {
         match (self, other) {
@@ -564,9 +564,9 @@ TODO: usage of `core::pin::Pin`
 這個方法會在兩個值都是 `Some` 的時候綁成一個元組，其餘都會回傳 `None` 。概念上是「且」運算，注意兩個所有權都會被吃掉。
 
 
-<a id="orgd280072"></a>
+<a id="org034771b"></a>
 
-### <a id="org336a6f0"></a> `copied`
+### <a id="orgd059251"></a> `copied`
 
 需要型態 `T` 有 `Copy` 特徵。
 
@@ -585,9 +585,9 @@ TODO: usage of `core::pin::Pin`
 兩個實作十分相近，都是利用閉包特性進行複製。
 
 
-<a id="org44387f1"></a>
+<a id="org6338b9b"></a>
 
-### <a id="orgfa7b05e"></a> `cloned`
+### <a id="org657aefd"></a> `cloned`
 
 需要型態 `T` 有 `Clone` 特徵。
 
@@ -603,12 +603,12 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-由於有強解參照，不用像上面的 [copied()](#org336a6f0) 一樣特別去寫閉包參數。
+由於有強解參照，不用像上面的 [copied()](#orgd059251) 一樣特別去寫閉包參數。
 
 
-<a id="org22a4107"></a>
+<a id="orgc64124f"></a>
 
-### <a id="org58da1cb"></a> `unwrap_or_default`
+### <a id="org98bf402"></a> `unwrap_or_default`
 
 需要型態 `T` 有 `Default` 特徵。
 
@@ -625,9 +625,9 @@ TODO: usage of `core::pin::Pin`
 非常簡單的一個 `match` 解決。
 
 
-<a id="org55e4edb"></a>
+<a id="org6641f18"></a>
 
-### <a id="orgdea3318"></a> `as_deref`
+### <a id="org493dbf4"></a> `as_deref`
 
 需要型態 `T` 有 [Deref](https://doc.rust-lang.org/core/ops/trait.Deref.html) 特徵。
 
@@ -640,9 +640,9 @@ TODO: usage of `core::pin::Pin`
 用 `as_ref()` 取得 `&T` 後，再用 `map()` 裡的 `deref()` 與強制解參，得到 `T` 型態的解參照型態 `&T::Target` 。
 
 
-<a id="org3aaebbf"></a>
+<a id="org14072a8"></a>
 
-### <a id="org7ed36b7"></a> `as_deref_mut`
+### <a id="org5f353bc"></a> `as_deref_mut`
 
 需要型態 `T` 有 [DerefMut](https://doc.rust-lang.org/core/ops/trait.DerefMut.html) 特徵。
 
@@ -655,9 +655,9 @@ TODO: usage of `core::pin::Pin`
 與上面接近，回傳型態不同。
 
 
-<a id="orgb49ae35"></a>
+<a id="orgc80a95f"></a>
 
-### <a id="org004e6ec"></a> `transpose`
+### <a id="orged477a5"></a> `transpose`
 
     impl<T, E> Option<Result<T, E>> {
         #[inline]
@@ -673,14 +673,14 @@ TODO: usage of `core::pin::Pin`
 將 `Option<Result<T, E>>` 轉成 `Result<Option<T>, E>` ，用 `match` 做簡單的對應就解決了。
 
 
-<a id="org8386385"></a>
+<a id="org06eb209"></a>
 
 ## Unstable
 
 
-<a id="orgae5ef88"></a>
+<a id="org4c72238"></a>
 
-### <a id="org3a41032"></a> `contains`
+### <a id="orgb198927"></a> `contains`
 
     #[inline]
     #[unstable(feature = "option_result_contains", issue = "62358")]
@@ -697,9 +697,9 @@ TODO: usage of `core::pin::Pin`
 從定義看出，這段程式碼在使用了特徵綁定後不需限於同型態，只需要單向的 `PartialEq` 特徵即可。
 
 
-<a id="orge482509"></a>
+<a id="org5db8cc4"></a>
 
-### <a id="org5ae9b80"></a> `zip_with`
+### <a id="orge22cd1c"></a> `zip_with`
 
     #[unstable(feature = "option_zip", issue = "70086")]
     pub fn zip_with<U, F, R>(self, other: Option<U>, f: F) -> Option<R>
@@ -712,9 +712,9 @@ TODO: usage of `core::pin::Pin`
 其中的 `?` 保證當自身或 `other` 其一是 `None` 時會直接回傳 `None` ，只有兩個都是 `Some` 時才會利用 `f` 將型態 `T` 與 `U` 映射到 `R` 上。
 
 
-<a id="org1da3ab4"></a>
+<a id="org59452bf"></a>
 
-### <a id="orgedc783d"></a> `expect_none`
+### <a id="org9e33e0e"></a> `expect_none`
 
 需要型態 `T` 有 [fmt::Debug](https://doc.rust-lang.org/core/fmt/trait.Debug.html) 特徵。
 
@@ -730,7 +730,7 @@ TODO: usage of `core::pin::Pin`
     }
 
 
-<a id="org42d7606"></a>
+<a id="org9fbde6d"></a>
 
 ### `expect_none_failed`
 
@@ -744,9 +744,9 @@ TODO: usage of `core::pin::Pin`
     }
 
 
-<a id="org8a34fe3"></a>
+<a id="orgc54cfc1"></a>
 
-### <a id="org69c743f"></a> `unwrap_none`
+### <a id="org1641baf"></a> `unwrap_none`
 
 需要型態 `T` 有 [fmt::Debug](https://doc.rust-lang.org/core/fmt/trait.Debug.html) 特徵。
 
@@ -762,9 +762,9 @@ TODO: usage of `core::pin::Pin`
     }
 
 
-<a id="orgd8aa7ac"></a>
+<a id="org8399be7"></a>
 
-### <a id="org0da5559"></a> `flatten`
+### <a id="org7358bb1"></a> `flatten`
 
 需要為型態 `Option<Option<T>>` 。
 
@@ -775,24 +775,24 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-[Use](#org454ae0f) 用到了 [core::convert::identity](https://doc.rust-lang.org/core/convert/fn.identity.html) 這個函數，與 [and<sub>then</sub>()](#org745d037) 這個方法，讓 `Some(opt)` 用 `convert::identity()` 轉成 `opt` ，而 `None` 則因為 `and_then` 轉成 `None` ，最後型態是 `Option<T>` 。
+[Use](#org1db1c36) 用到了 [core::convert::identity](https://doc.rust-lang.org/core/convert/fn.identity.html) 這個函數，與 [and<sub>then</sub>()](#org3153524) 這個方法，讓 `Some(opt)` 用 `convert::identity()` 轉成 `opt` ，而 `None` 則因為 `and_then` 轉成 `None` ，最後型態是 `Option<T>` 。
 
 
-<a id="orgbcf578e"></a>
+<a id="orgc4b10ac"></a>
 
 # Unsafe Methods
 
 沒有這種東西。
 
 
-<a id="org231e6fe"></a>
+<a id="org20a0349"></a>
 
 # Trait Implementations
 
 
-<a id="org230dbb2"></a>
+<a id="org20b5099"></a>
 
-## <a id="org7b1ca69"></a> Clone
+## <a id="orge6ea26b"></a> Clone
 
     impl<T: Clone> Clone for Option<T> {
         #[inline]
@@ -815,9 +815,9 @@ TODO: usage of `core::pin::Pin`
 `clone()` 很簡單，就是用內容的 `clone()` 再在外面包一層 `Some` 。當 `clone_from()` 的兩個都是 `Some` 時也很簡單； `(Some, None)` 時用了 `Option` 內的 `clone()` 所以保證會複製到 `None` ； `(None, Some)` 時自身的值被 `Some` 裡面的值更新，所以也保證會複製到 `Some` ； `(None, None)` 時則保證會複製到 `None` 。
 
 
-<a id="org7ecf6de"></a>
+<a id="orgdb6d882"></a>
 
-## <a id="org90fb6b5"></a> Default
+## <a id="org8218958"></a> Default
 
     impl<T> Default for Option<T> {
         #[inline]
@@ -829,9 +829,9 @@ TODO: usage of `core::pin::Pin`
 預設值是 `None` 。所以不需要型態 `T` 有任何的 `Default` 實作。
 
 
-<a id="org92840e0"></a>
+<a id="orgba5baa3"></a>
 
-## <a id="org33673d1"></a> IntoIterator
+## <a id="org1896a78"></a> IntoIterator
 
     impl<T> IntoIterator for Option<T> {
         type Item = T;
@@ -843,7 +843,7 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-建立一個 [IntoIter](#orgb61364c) 結構，會把所有權拿走。
+建立一個 [IntoIter](#org5792f25) 結構，會把所有權拿走。
 
     impl<'a, T> IntoIterator for &'a Option<T> {
         type Item = &'a T;
@@ -854,7 +854,7 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-這邊直接使用了 [Iter](#org5092ef1) 結構。
+這邊直接使用了 [Iter](#orgb1fd13a) 結構。
 
     impl<'a, T> IntoIterator for &'a mut Option<T> {
         type Item = &'a mut T;
@@ -865,12 +865,12 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-這邊直接使用了 [IterMut](#orgc300f9b) 結構。
+這邊直接使用了 [IterMut](#org1d187d1) 結構。
 
 
-<a id="orge14fcae"></a>
+<a id="orge1a9cbf"></a>
 
-## <a id="org81200a4"></a> From
+## <a id="orga0ddeeb"></a> From
 
     impl<T> From<T> for Option<T> {
         fn from(val: T) -> Option<T> {
@@ -886,7 +886,7 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-這邊會複製的是參照，生命期為 `o` 的參照來源。使用了 [as<sub>ref</sub>()](#org557a319) 方法，所以可以將型態從 `&Option<T>` 轉為 `Option<&T>` 而且不複製到內容物本身。
+這邊會複製的是參照，生命期為 `o` 的參照來源。使用了 [as<sub>ref</sub>()](#org372dd0d) 方法，所以可以將型態從 `&Option<T>` 轉為 `Option<&T>` 而且不複製到內容物本身。
 
     impl<'a, T> From<&'a mut Option<T>> for Option<&'a mut T> {
         fn from(o: &'a mut Option<T>) -> Option<&'a mut T> {
@@ -894,12 +894,12 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-這邊複製一個可變參照，生命期為 `o` 的參照來源。使用了 [as<sub>mut</sub>()](#org8fe292d) 方法，所以可以將型態從 `&mut Option<T>` 轉為 `Option<&mut T>` 而不複製內容易本身。
+這邊複製一個可變參照，生命期為 `o` 的參照來源。使用了 [as<sub>mut</sub>()](#orga8f6f30) 方法，所以可以將型態從 `&mut Option<T>` 轉為 `Option<&mut T>` 而不複製內容易本身。
 
 
-<a id="org262aceb"></a>
+<a id="org5326fdd"></a>
 
-## <a id="orga038d0e"></a> FromIterator
+## <a id="orgd1cd6d1"></a> FromIterator
 
     
     impl<A, V: FromIterator<A>> FromIterator<Option<A>> for Option<V> {
@@ -915,9 +915,9 @@ TODO: usage of `core::pin::Pin`
 註解裡提到的 [Iterator::scan](https://doc.rust-lang.org/core/iter/trait.Iterator.html#method.scan) 是創出新的迭代器的方法。參數 `iter` 的型態 `I` 必須要有 `IntoIterator` 中 `Item = Option<A>` 的實作；最後的回傳型態 `V` 則必須要有 `FromIterator` 中型態 `A` 的實作。首先是把參數 `iter` 用 `into_iter()` 轉成 `IntoIterator` ，再用 `map()` 將每個型態為 `Option<A>` 的元素 `x` 用 `ok_or()` 轉成型態 `Result<A, ()>` ，此時外面型態是 `Map<Self, F>` ，然後用 `IntoIterator` 的方法 `collect()` 做成 `Result<V, ()>` ，最後再用 `Result` 的方法 `ok()` 轉回 `Option<V>` 。
 
 
-<a id="org60ddc38"></a>
+<a id="orgb772959"></a>
 
-## <a id="orgc3b60f5"></a> ops::Try (Unstable)
+## <a id="org745c02a"></a> ops::Try (Unstable)
 
     #[unstable(feature = "try_trait", issue = "42327")]
     impl<T> ops::Try for Option<T> {
@@ -940,20 +940,20 @@ TODO: usage of `core::pin::Pin`
         }
     }
 
-這個以後可能用來取代 [ok<sub>or</sub>()](#orgc477ee5) 等等方法，以一個 `?` 就回傳 `Result` 型態。
+這個以後可能用來取代 [ok<sub>or</sub>()](#orgcb6b289) 等等方法，以一個 `?` 就回傳 `Result` 型態。
 
 
-<a id="org13abbdd"></a>
+<a id="orgb88569e"></a>
 
 # Structs
 
 
-<a id="orga7bed55"></a>
+<a id="org25125d5"></a>
 
-## <a id="org00457cb"></a> Item
+## <a id="org346801e"></a> Item
 
 
-<a id="org5d15c68"></a>
+<a id="orgeb3401c"></a>
 
 ### Definition
 
@@ -962,10 +962,10 @@ TODO: usage of `core::pin::Pin`
         opt: Option<A>,
     }
 
-[Iter](#org5092ef1) 內的欄位結構。
+[Iter](#orgb1fd13a) 內的欄位結構。
 
 
-<a id="org6d01ead"></a>
+<a id="org840259e"></a>
 
 ### Trait Implementations
 
@@ -988,7 +988,7 @@ TODO: usage of `core::pin::Pin`
             }
         }
     
-    實作上使用 [take()](#org9768681) 這個方法達成。 其中的 `size_hint()` 因為非常簡單所以用 `match` 來加速。
+    實作上使用 [take()](#orgf18ffd9) 這個方法達成。 其中的 `size_hint()` 因為非常簡單所以用 `match` 來加速。
 
 2.  DoubleEndedIterator
 
@@ -1014,14 +1014,14 @@ TODO: usage of `core::pin::Pin`
         unsafe impl<A> TrustedLen for Item<A> {}
 
 
-<a id="org00ca733"></a>
+<a id="orgb127045"></a>
 
-## <a id="org5092ef1"></a> Iter
+## <a id="orgb1fd13a"></a> Iter
 
-[iter()](#org2b777a0) 所回傳的結構。
+[iter()](#org498d766) 所回傳的結構。
 
 
-<a id="orgc97910d"></a>
+<a id="org6022e0e"></a>
 
 ### Definition
 
@@ -1033,7 +1033,7 @@ TODO: usage of `core::pin::Pin`
 借用的生命期為 `a` ，而結構本身的生命期也為 `a` 。
 
 
-<a id="orge41eed3"></a>
+<a id="orgd9103a9"></a>
 
 ### Trait Implementations
 
@@ -1052,7 +1052,7 @@ TODO: usage of `core::pin::Pin`
             }
         }
     
-    利用了另一個結構 [Item](#org00457cb) 簡化了麻煩的生命期標註，這邊只做呼叫內部的方法完成。
+    利用了另一個結構 [Item](#org346801e) 簡化了麻煩的生命期標註，這邊只做呼叫內部的方法完成。
 
 2.  DoubleEndedIterator
 
@@ -1080,7 +1080,7 @@ TODO: usage of `core::pin::Pin`
             }
         }
     
-    不使用 `derive` 巨集，而是明確呼叫 [Item](#org00457cb) 的 `clone()` 。
+    不使用 `derive` 巨集，而是明確呼叫 [Item](#org346801e) 的 `clone()` 。
 
 6.  TrustedLen (Unstable)
 
@@ -1088,14 +1088,14 @@ TODO: usage of `core::pin::Pin`
         unsafe impl<A> TrustedLen for Iter<'_, A> {}
 
 
-<a id="org16a105c"></a>
+<a id="orgcfb31b8"></a>
 
-## <a id="orgc300f9b"></a> IterMut
+## <a id="org1d187d1"></a> IterMut
 
-[iter<sub>mut</sub>()](#orgb0c4f94) 所回傳的結構。
+[iter<sub>mut</sub>()](#org4a034db) 所回傳的結構。
 
 
-<a id="org7822996"></a>
+<a id="org18ba0bf"></a>
 
 ### Definition
 
@@ -1104,10 +1104,10 @@ TODO: usage of `core::pin::Pin`
         inner: Item<&'a mut A>,
     }
 
-與上方的[Iter](#org5092ef1) 不同的是多了一個 `mut` 借用。
+與上方的[Iter](#orgb1fd13a) 不同的是多了一個 `mut` 借用。
 
 
-<a id="org7ea7131"></a>
+<a id="orgfc24096"></a>
 
 ### Trait Implementations
 
@@ -1126,7 +1126,7 @@ TODO: usage of `core::pin::Pin`
             }
         }
     
-    所有的實作都交由 [Item](#org00457cb) 完成， [Iter](#org5092ef1) 與 [IterMut](#orgc300f9b) 只負責做出泛型的不同借用，非常高的抽象程度。
+    所有的實作都交由 [Item](#org346801e) 完成， [Iter](#orgb1fd13a) 與 [IterMut](#org1d187d1) 只負責做出泛型的不同借用，非常高的抽象程度。
 
 2.  DoubleEndedIterator
 
@@ -1150,14 +1150,14 @@ TODO: usage of `core::pin::Pin`
         unsafe impl<A> TrustedLen for IterMut<'_, A> {}
 
 
-<a id="org35ef0eb"></a>
+<a id="org209937a"></a>
 
-## <a id="orgb61364c"></a> IntoIter
+## <a id="org5792f25"></a> IntoIter
 
-[IntoIterator](#org33673d1) 所回傳的結構。
+[IntoIterator](#org1896a78) 所回傳的結構。
 
 
-<a id="org0790159"></a>
+<a id="org7ca4286"></a>
 
 ### Definition
 
@@ -1167,7 +1167,7 @@ TODO: usage of `core::pin::Pin`
     }
 
 
-<a id="org85d1e17"></a>
+<a id="orga99761a"></a>
 
 ### Trait Implementations
 
@@ -1186,7 +1186,7 @@ TODO: usage of `core::pin::Pin`
             }
         }
     
-    與前面都一樣，利用了共同的內容結構 [Item](#org00457cb) 的實作完成特徵的實作。
+    與前面都一樣，利用了共同的內容結構 [Item](#org346801e) 的實作完成特徵的實作。
 
 2.  DoubleEndedIterator
 
@@ -1211,9 +1211,9 @@ TODO: usage of `core::pin::Pin`
         unsafe impl<A> TrustedLen for IntoIter<A> {}
 
 
-<a id="orgb5f7831"></a>
+<a id="orgbe8dad7"></a>
 
-## <a id="org7bc635d"></a> NoneError (Unstable)
+## <a id="org0999581"></a> NoneError (Unstable)
 
     #[unstable(feature = "try_trait", issue = "42327")]
     #[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
