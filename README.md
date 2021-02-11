@@ -26,12 +26,12 @@
 ## Studies of Standard Library
 對[標準函數庫](https://github.com/rust-lang/rust)的一些程式碼研讀。
 
-  * [Option](./std-study/option.org) (TODO)
-  * [Result](./std-study/result.org) (TODO)
-  * [Vec](./std-study/vec.org) (TODO)
-  * [VecDeque](./std-study/vec-deque.org) (TODO)
-  * [LinkedList](./std-study/linked-list.org) (TODO)
-  * [Iterator](./std-study/iterator.org) (TODO)
+  * [Option](./std-study/option.md)
+  * [Result](./std-study/result.md) (TODO)
+  * [Vec](./std-study/vec.md) (TODO)
+  * [VecDeque](./std-study/vec-deque.md) (TODO)
+  * [LinkedList](./std-study/linked-list.md) (TODO)
+  * [Iterator](./std-study/iterator.md) (TODO)
 
 ## Other Informations
 * [Terms](./terms.org): Translation of Terms

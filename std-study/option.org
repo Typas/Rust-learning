@@ -1,6 +1,6 @@
 #+TITLE: Option
 #+AUTHOR: Typas Liao
-#+DATE: <2020-09-12 六>
+#+DATE: [2020-09-12 Sat]
 
 [[https://github.com/rust-lang/rust/blob/master/library/core/src/option.rs][Source Code Location]]
 
@@ -33,7 +33,7 @@ pub enum Option<T> {
 
 * Const Methods
 
-** Stable, but unstable const, issue 67441
+** Stable
 
 *** <<method-is_some>> =is_some=
 
@@ -56,6 +56,22 @@ pub const fn is_none(&self) -> bool {
 #+END_SRC
 
 上面的 =is_some= 的反轉，只是我不太能理解為什麼是用 =Some= 而不是 =None= 去對應。
+
+*** <<method-as_ref>> =as_ref=
+
+#+BEGIN_SRC rust
+#[inline]
+pub const fn as_ref(&self) -> Option<&T> {
+    match *self {
+        Some(ref x) => Some(x),
+        None => None,
+    }
+}
+#+END_SRC
+
+用到了 =match= 裡的 =ref= 關鍵字，配對的值本身型態是 =U= 時，加上 =ref= 則在分支內的變數 =x= 會是 =&U= 型態。
+
+** Stable, but unstable const
 
 *** <<method-unwrap>> =unwrap=
 
@@ -88,20 +104,6 @@ pub const fn iter(&self) -> Iter<'_, T> {
 * Safe Methods
 
 ** Stable
-
-*** <<method-as_ref>> =as_ref=
-
-#+BEGIN_SRC rust
-#[inline]
-pub const fn as_ref(&self) -> Option<&T> {
-    match *self {
-        Some(ref x) => Some(x),
-        None => None,
-    }
-}
-#+END_SRC
-
-用到了 =match= 裡的 =ref= 關鍵字，配對的值本身型態是 =U= 時，加上 =ref= 則在分支內的變數 =x= 會是 =&U= 型態。
 
 *** <<method-as_mut>> =as_mut=
 
@@ -271,6 +273,24 @@ pub fn ok_or_else<E, F: FnOnce() -> E>(self, err: F) -> Result<T, E> {
 
 從 =ok_or= 的錯誤參數改成使用一個回傳錯誤的函數。會拿走自身的所有權。
 
+*** <<method-insert>> =insert=
+
+#+begin_src rust
+#[inline]
+#[unstable(feature = "option_insert", reason = "newly added", issue = "78271")]
+pub fn insert(&mut self, value: T) -> &mut T {
+    *self = Some(value);
+
+    match self {
+        Some(v) => v,
+        // SAFETY: the code above just filled the option
+        None => unsafe { hint::unreachable_unchecked() },
+    }
+}
+#+end_src
+
+以 =value= 取代原有的值，原值會被丟掉。 =value= 的所有權會被轉移，回傳的為可變參照。
+
 *** <<method-iter_mut>> =iter_mut=
 
 #+BEGIN_SRC rust
@@ -294,13 +314,12 @@ pub fn and<U>(self, optb: Option<U>) -> Option<U> {
 }
 #+END_SRC
 
-與不同型態做邏輯的「且」運算，注意是回傳 =optb= 的結果，兩方的所有權都會被轉移。
+與不同型態做邏輯的「且」運算，注意是回傳 =optb= 的結果。
 
 *** <<method-and_then>> =and_then=
 
 #+BEGIN_SRC rust
 #[inline]
-#[stable(feature = "rust1", since = "1.0.0")]
 pub fn and_then<U, F: FnOnce(T) -> Option<U>>(self, f: F) -> Option<U> {
     match self {
         Some(x) => f(x),
@@ -351,7 +370,7 @@ pub fn or(self, optb: Option<T>) -> Option<T> {
 }
 #+END_SRC
 
-與同型態做邏輯的「或」運算，兩個參數都會被拿走所有權。在自身有值時會回傳自身，反之回傳 =optb= 。
+與同型態做邏輯的「或」運算。在自身有值時會回傳自身，反之回傳 =optb= 。
 
 *** <<method-or_else>> =or_else=
 
@@ -380,14 +399,14 @@ pub fn xor(self, optb: Option<T>) -> Option<T> {
 }
 #+END_SRC
 
-與同型態做邏輯的「互斥或」運算，兩個參數都會被拿走所有權。兩者皆有或皆無值時回傳 =None= ，其一有值時回傳有值的一邊。
+與同型態做邏輯的「互斥或」運算。兩者皆有或皆無值時回傳 =None= ，其一有值時回傳有值的一邊。
 
 *** <<method-get_or_insert>> =get_or_insert=
 
 #+BEGIN_SRC rust
 #[inline]
-pub fn get_or_insert(&mut self, v: T) -> &mut T {
-    self.get_or_insert_with(|| v)
+pub fn get_or_insert(&mut self, value: T) -> &mut T {
+    self.get_or_insert_with(|| value)
 }
 #+END_SRC
 
@@ -399,11 +418,11 @@ pub fn get_or_insert(&mut self, v: T) -> &mut T {
 #[inline]
 pub fn get_or_insert_with<F: FnOnce() -> T>(&mut self, f: F) -> &mut T {
     if let None = *self {
-        ,*self = Some(f());
+        *self = Some(f());
     }
 
-    match *self {
-        Some(ref mut v) => v,
+    match self {
+        Some(v) => v,
         // SAFETY: a `None` variant for `self` would have been replaced by a `Some`
         // variant in the code above.
         None => unsafe { hint::unreachable_unchecked() },
@@ -411,7 +430,7 @@ pub fn get_or_insert_with<F: FnOnce() -> T>(&mut self, f: F) -> &mut T {
 }
 #+END_SRC
 
-第一段程式碼將所有的 =None= 轉換成 =Some(f())= 。第二段程式碼中利用 =match= 的 =ref mut= 把 =T= 轉成 =&mut T= 後回傳，其中 =None= 分支由第一段保證不會被執行到，因此用一段 SAFETY 註解標示為何使用到 =unsafe= 。
+第一段程式碼將所有的 =None= 轉換成 =Some(f())= 。第二段程式碼中利用強解參照把 =Option<T>= 轉成 =&mut T= 後回傳，其中 =None= 分支由第一段保證不會被執行到，因此用一段 SAFETY 註解標示為何使用到 =unsafe= 。
 此處有用到 [[use][core::hint]] 。
 
 *** <<method-take>> =take=
@@ -447,7 +466,7 @@ pub fn zip<U>(self, other: Option<U>) -> Option<(T, U)> {
 }
 #+END_SRC
 
-這個方法會在兩個值都是 =Some= 的時候綁成一個元組，其餘都會回傳 =None= 。概念上是「且」運算，注意兩個所有權都會被吃掉。
+這個方法會在兩個值都是 =Some= 的時候綁成一個元組，其餘都會回傳 =None= 。概念上是「且」運算。
 
 *** <<method-copied>> =copied=
 
@@ -523,7 +542,7 @@ impl<T: Deref> Option<T> {
 }
 #+END_SRC
 
-用 =as_ref()= 取得 =&T= 後，再用 =map()= 裡的 =deref()= 與強制解參，得到 =T= 型態的解參照型態 =&T::Target= 。
+用 =as_ref()= 取得 =&T= 後，再用 =map()= 裡的 =deref()= 與強解參照，得到 =T= 型態的解參照型態 =&T::Target= 。
 
 *** <<method-as_deref_mut>> =as_deref_mut=
 
@@ -561,6 +580,7 @@ impl<T, E> Option<Result<T, E>> {
 *** <<method-contains>> =contains=
 
 #+BEGIN_SRC rust
+#[must_use]
 #[inline]
 #[unstable(feature = "option_result_contains", issue = "62358")]
 pub fn contains<U>(&self, x: &U) -> bool
@@ -654,7 +674,25 @@ impl<T> Option<Option<T>> {
 
 * Unsafe Methods
 
-沒有這種東西。
+** Unstable
+
+*** <<method-unwrap_unchecked>> =unwrap_unchecked=
+
+#+begin_src rust
+#[inline]
+#[track_caller]
+#[unstable(feature = "option_result_unwrap_unchecked", reason = "newly added", issue = "81383")]
+pub unsafe fn unwrap_unchecked(self) -> T {
+    debug_assert!(self.is_some());
+    match self {
+        Some(val) => val,
+        // SAFETY: the safety contract must be upheld by the caller.
+        None => unsafe { hint::unreachable_unchecked() },
+    }
+}
+#+end_src
+
+不檢查就直接把 =Option<T>= 轉換成 =T= 型態，如果裡面為 =None= 時為未定義行為。
 
 * Trait Implementations
 
@@ -710,7 +748,7 @@ impl<T> IntoIterator for Option<T> {
 }
 #+END_SRC
 
-建立一個 [[struct-intoiter][IntoIter]] 結構，會把所有權拿走。
+建立一個 [[struct-intoiter][IntoIter]] 結構。
 
 #+BEGIN_SRC rust
 impl<'a, T> IntoIterator for &'a Option<T> {
@@ -1027,6 +1065,7 @@ impl<A> FusedIterator for IterMut<'_, A> {}
 **** TrustedLen (Unstable)
 
 #+BEGIN_SRC rust
+#[unstable(feature = "trusted_len", issue = "37572")]
 unsafe impl<A> TrustedLen for IterMut<'_, A> {}
 #+END_SRC
 
@@ -1087,7 +1126,7 @@ impl<A> ExactSizeIterator for IntoIter<A> {}
 impl<A> FusedIterator for IntoIter<A> {}
 #+END_SRC
 
-**** TrustedLen
+**** TrustedLen (Unstable)
 
 #+BEGIN_SRC rust
 #[unstable(feature = "trusted_len", issue = "37572")]
