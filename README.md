@@ -5,7 +5,7 @@
 
 * [Chapter 3](./the-book/chapter-03.org): Common Programming Concepts
 * [Chapter 4](./the-book/chapter-04.org): Understanding Ownership
-* [Chapter 5](./cthe-book/hapter-05.org): Using Structs to Structure Related Data
+* [Chapter 5](./the-book/chapter-05.org): Using Structs to Structure Related Data
 * [Chapter 6](./the-book/chapter-06.org): Enums and Pattern Matching
 * [Chapter 7](./the-book/chapter-07.org): Managing Growing Projects with Packages, Crates, and Modules
 * [Chapter 8](./the-book/chapter-08.org): Common Collections
