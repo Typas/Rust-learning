@@ -2,6 +2,181 @@
 
 因為 Rust 傾向維持很小的標準函數庫，所以有很多事實上的標準函數庫會散落在 crates.io 中。如果有遺漏的，請開 issue 提醒我加入。
 
+* Miscellaneous
+
+** [[https://crates.io/crates/itertools][itertools]]
+
+** [[https://crates.io/crates/rand][rand]]
+
+** [[https://crates.io/crates/regex][regex]]
+
+** [[https://crates.io/crates/bitflags][bitflags]]
+
+** [[https://crates.io/crates/lazy_static][lazy-static]]
+
+* Science
+
+** [[https://crates.io/crates/num][num]]
+
+** [[https://crates.io/crates/num-derive][num-derive]]
+
+** [[https://crates.io/crates/ordered-float][ordered-float]]
+
+** [[https://crates.io/crates/ndarray][ndarray]]
+
+** [[https://crates.io/crates/nalgebra][nalgebra]]
+
+* Data Structure
+
+** [[https://crates.io/crates/arrayvec][arrayvec]]
+Fixed capacity, mostly on stack, able to collect from iterator.
+注意： =len()= 與 =capacity()= 會不同，如果 iterate 到超過 =len()= 的範圍就會 panic。
+
+** [[https://crates.io/crates/smallvec][smallvec]]
+Small vector on stack, able to collect from iterator.
+
+** [[https://crates.io/crates/tinyvec][tinyvec]]
+Automatically determine the vector is either on stack or on heap.
+
+** [[https://crates.io/crates/generic-array][generic-array]]
+Array with generic
+
+** [[https://crates.io/crates/either][either]]
+
+** [[https://crates.io/crates/indexmap][indexmap]]
+
+** [[https://crates.io/crates/petgraph][petgraph]]
+
+** [[https://crates.io/crates/maplit][maplit]]
+Macros to create map/set
+
+* Concurrency
+
+** [[https://crates.io/crates/rayon][rayon]]
+
+** [[https://crates.io/crates/crossbeam][crossbeam]]
+
+** [[https://crates.io/crates/crossbeam-epoch][crossbeam-epoch]]
+
+** [[https://crates.io/crates/crossbeam-channel][crossbeam-channel]]
+
+** [[https://crates.io/crates/crossbeam-deque][crossbeam-deque]]
+
+* Asynchronous Runtime
+
+** [[https://crates.io/crates/tokio][tokio]]
+
+** [[https://crates.io/crates/async-std][async-std]]
+
+** [[https://crates.io/crates/smol][smol]]
+
+* Asynchronous
+
+** [[https://crates.io/crates/futures][futures]]
+
+** [[https://crates.io/crates/async-trait][async-trait]]
+
+* Date and Time
+
+** [[https://crates.io/crates/time][time]]
+
+** [[https://crates.io/crates/chrono][chrono]] [deprecated]
+Should wait for version 0.5 release.
+
+* Decode and Encode
+
+** [[https://crates.io/crates/serde][serde]]
+
+** [[https://crates.io/crates/base64][base64]]
+
+* Log
+
+** [[https://crates.io/crates/log][log]]
+
+** [[https://crates.io/crates/env_logger][env_logger]]
+
+** [[https://crates.io/crates/tracing][tracing]]
+
+* Unicode
+
+** [[https://crates.io/crates/unicode-xid][unicode-xid]]
+
+** [[https://crates.io/crates/unicode-width][unicode-width]]
+
+** [[https://crates.io/crates/unicode-bidi][unicode-bidi]]
+
+** [[https://crates.io/crates/unicode-normalization][unicode-normalization]]
+
+** [[https://crates.io/crates/unicode-segmentation][unicode-segmentation]]
+
+* Building Utilities
+
+** [[https://crates.io/crates/cc][cc]]
+
+** [[https://crates.io/crates/pkg-config][pkg-config]]
+
+** [[https://crates.io/crates/semver][semver]]
+
+* Operating System Related
+
+** [[https://crates.io/crates/cfg-if][cfg-if]]
+
+** [[https://crates.io/crates/nix][nix]]
+
+** [[https://crates.io/crates/winapi][winapi]]
+
+** [[https://crates.io/crates/ntapi][ntapi]]
+
+* Procedure Macro Utilities
+
+** [[https://crates.io/crates/proc-macro2][proc-macro2]]
+
+** [[https://crates.io/crates/quote][quote]]
+
+** [[https://crates.io/crates/syn][syn]]
+
+* FFI
+
+** [[https://crates.io/crates/libc][libc]]
+
+** [[https://crates.io/crates/openssl-sys][openssl-sys]]
+
+** [[https://crates.io/crates/bindgen][bindgen]]
+
+** [[https://crates.io/crates/pyo3][pyo3]]
+
+* Low Level Utilities
+
+** [[https://crates.io/crates/rand_core][rand_core]]
+
+** [[https://crates.io/crates/getrandom][getrandom]]
+
+** [[https://crates.io/crates/mio][mio]]
+
+** [[https://crates.io/crates/regex-syntax][regex-syntax]]
+
+** [[https://crates.io/crates/ieee754][ieee754]]
+
+** [[https://crates.io/crates/matrixmultiply][matrixmultiply]]
+
+** [[https://crates.io/crates/itoa][itoa]]
+
+** [[https://crates.io/crates/http][http]]
+
+** [[https://crates.io/crates/h2][h2]]
+
+** [[https://crates.io/crates/bytes][bytes]]
+
+** [[https://crates.io/crates/lock_api][lock_api]]
+
+** [[https://crates.io/crates/memoffset][memoffset]]
+
+** [[https://crates.io/crates/url][url]]
+
+** [[https://crates.io/crates/slab][slab]]
+
+* Old Table
+
 | 名稱與連結      | 作者                             | 類型                                           | 備註       |
 |-----------------+----------------------------------+------------------------------------------------+------------|
 | [[https://crates.io/crates/arrayvec][arrayvec]]        | bluss                            | no-std, data structure                         |            |
