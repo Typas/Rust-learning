@@ -1,0 +1,66 @@
+#+TITLE: 你的不可變引用不是你的不可變引用
+#+DATE: [2020-08-29 Sat]
+#+AUTHOR: Typas Liao
+
+* Introduction
+講者：吳昱緯 @WUSYONG
+
+* TL;DR
+=&T= means "shared reference"
+=&mut T= means "exclusive reference"
+
+* Reference & Borrowing
+想要拿到資料的話，常會用 =&=
+
+* HOLUP
+atomic type <- 改變用immutable reference會過，why?
+
+* 多處理器程式
+順序從強到弱
+dual 386 > x86/64 > ARM, PowerPC
+** 記憶體順序
+保證記憶體在多CPU共用的情況下能夠同步。
+
+** MESI protocol
+modified, exclusive, shared, invalid
+以四種狀態表示記憶體在不同CPU的使用狀態
+
+** Atomic type
+std::sync::atomic::Ordering
+Relaxed < Acquire/Release | AcqRel < SeqCst
+越右邊越強
+
+*** Relaxed: 保證指令內的順序不被改變
+- Strong ordered CPUs:
+  - use acquire/release
+*** Acquire: 保證指令前的所有指令都被執行
+- load
+set memory fence
+- strong ordered CPUs:
+  - no-op
+*** Release: 保證指令前的所有指令都寫入完才執行
+- write
+- 常與Acquire搭配達成lock
+- strong ordered CPUs:
+  - no-op
+*** AcqRel: Acquire + Release
+*** SeqCst: sequential consistency
+避免CPU為了pipeline重排load/write的順序
+
+** Atomic 保障
+能保證記憶體狀態是從MESI的shared到shared，因此是一個shared reference。
+
+* Interior Mutability
+** UnsafeCell<T>
+唯一可以改變內部值的struct，只有get method，回傳raw pointer。
+** Cell<T>
+- !Sync, !Send
+- no way to get content from ref, all aceess done by copying data
+** RefCell<T>
+- !Sync, !Send
+- dynamically checked borrow rules
+** Mutex<T>
+- only reference may operate on the inner T at a time
+** RwLock<T>
+- 讀取多個
+- 寫入只有一個

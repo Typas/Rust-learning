@@ -1,0 +1,28 @@
+#+title: Ownership
+
+* Ownership and Lifetime
+Take car as an example, the /ownership/ of the object car is the person who owns the car. And the /lifetime/ of the car is the time from manufactured to scrapped. The transfer of ownership is like the original owner sell the car to another person, the original owner no longer able to use the car.
+Since the car is expensive to make another, we would like to transfer than duplicate a new one, however, somethings, for example, keys, are cheap enough to duplicate. When we know it's cheap to duplicate one and want to duplicate it, we can use the marker trait =Copy= to inform that.
+
+* Borrows
+There are two kinds of /borrow/, one is mutable, another is immutable. /Immutable borrow/ is like you get a copy of the garage key. You can get into the garage and take a look at the car. You can know what type the tyre is, how many doors does the car have, the color of the car, etc. Nevertheless, you cannot drive the car, open the door, or roll down the window.
+In order to drive the car, you need a mutable borrow, i.e., have the key of the car. /Mutable borrow/ is exclusive, in the example, there's no way two people having the key drive the car at the same time. To avoid this double-drive problem, easiest way is to keep the key unique, that's the idea of mutable borrow.
+
+* Unsafe
+In the car example, /unsafe/ is like screwdrivers or other car tools. Most of the time you don't need it, unless you want to tune the car to fit specific situation.
+
+* 哭啊我英文有夠爛
+這東西洗澡時想到的，邏輯上大概有些洞。
+** 所有權與生命期
+以車子來舉例，車子這物件的「所有權」在擁有這台車的人身上。車子的「生命期」則是它出廠到銷毀的期間。所有權的轉移就像原車主賣給另一個人，轉移後原車主就不再能使用這台車了。
+因為車子要做出另一台很貴，我們會傾向轉移所有權，而不是再做一台出來。但是有些東西，再做一個的成本很低，像是鑰匙。如果我們知道複製一個很便宜，而且想要它有多份的話，可以用 marker 特徵 =Copy= 來標注。
+
+** 借用
+有兩種「借用」，一種是可變的，一種是不變的。「不變借用」就像你給別人一把你家車庫的鑰匙。他可以進車庫裡看看車。他可以知道你的車的輪胎什麼廠牌的、有多少扇門、顏色是什麼等等。但是他不能開車、打開車門、或是搖下車窗。
+要開車的話，他須要一個「可變借用」，也就是你的車鑰匙。可變借用本身有排他性，以車的例子來說，不可能有辦法有兩個有車鑰匙的人同時開車。要避免掉這種雙開問題，最簡單的解法是讓車鑰匙獨一無二，這就是可變借用的想法。
+
+** 不安
+好我知道這詞翻得很爛。在車子的例子裡，「不安」像螺絲起子或是其他的車用工具。大多時候你不會需要它，除非你想把車子調教成特定場合專用。
+
+** 其他零碎的東西
+請先假設上面的車庫裡面就只有一台車，要進其他地方有上鎖的門，車庫進去只看得到那台車，沒有其他東西。在解釋能有多個不變借用可以用車庫能容納多個人同時看車，而有任一個可變借用時不能有任何不變借用存在可以用車不一定在車庫裡，不能確定有車庫鑰匙的人有沒有看到車。在借用時如果我們能保證車鑰匙有機制可以讓任一個人開車時不會有其他人能開車，例如其他的人的車鑰匙都暫時失效，這車鑰匙就是一個不變借用，只是通常相對於只有一把鑰匙的可變借用成本高出不少。
